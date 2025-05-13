@@ -1,4 +1,5 @@
 
+
 Object.keys(Entries).forEach(key => {
     let techName = key
     let techEntries = Entries[techName]
@@ -13,9 +14,24 @@ Object.keys(Entries).forEach(key => {
 
 
 function loadContent(path){
+    let originalPath = path
     path = 'snippets/' + path + '.html'
-    fetch(path).then(data=>data.text()).then(data=>contentDiv.innerHTML =data )
-    
+    fetch(path).then(data=>{
+        if(data.ok|| data.status == 304) return data.text()
+        else return "Not found"
+    }).then(data=>{
+        contentDiv.innerHTML = data
+        const url = new URL(window.location.href);
+        url.searchParams.set("entry", originalPath.replace('/','_'));
+        window.history.replaceState({}, '', url.toString());
+    })
 }
 
-loadContent('php/dates')
+const params = new URLSearchParams(window.location.search);
+
+// Obtener un parámetro específico:
+const entry = params.get("entry");
+
+if(entry){
+    loadContent(entry.replace('_','/'))
+}
