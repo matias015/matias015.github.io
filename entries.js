@@ -2,7 +2,13 @@ const Entries = {
     'javascript':[
         {
             'title': 'The native Date object',
-            'entry': 'js/dates'
+            'path': 'js/dates'
+        }
+    ],
+    'php':[
+        {
+            'title': 'The native Date object',
+            'path': 'php/dates'
         }
     ]
 }

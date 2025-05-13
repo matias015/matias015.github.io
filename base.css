@@ -1,0 +1,14 @@
+body{
+    padding: 1rem;
+}
+
+pre{
+    background-color: rgb(19, 19, 19);
+    color: aliceblue;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+p{
+    margin: 0.5rem;
+}
