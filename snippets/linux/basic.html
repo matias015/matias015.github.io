@@ -1,0 +1,41 @@
+<h3>EL comando ls</h3>
+
+<p>
+    muestra el contenido pero listado en formato lista ademas de mostrar
+    permisos, número de enlaces, propietario, grupo, tamaño, fecha de modificación y nombre del archivo.
+</p>
+
+<pre>
+    $ ls -l /home/mydir
+</pre>
+
+<p>El flag -a muestra archivos ocultos, que comienzan con un punto.</p>
+
+<pre>
+    $ ls -a /home/mydir
+    $ ls -la /home/mydir
+</pre>
+
+<p>Ordenar por fecha (más reciente al final)</p>
+<pre>
+    $ ls -lt
+</pre>
+
+<p>Ordernar por tamaño</p>
+<pre>
+    $ ls -lS
+</pre>
+
+<p>Mostrar en formato "legible" por humanos (tamaños en KB, MB...)</p>
+<pre>$ ls -lh</pre>
+
+<p>Para ver todos los archivos y subdirectorios recursivamente:</p>
+
+<pre>
+    $ ls -R
+</pre>
+
+<p>Podemos mostrar el peso de archivos en mb con</p>
+<pre>
+    $ ls -l --block-size=M /...
+</pre>

@@ -7,7 +7,7 @@ Object.keys(Entries).forEach(key => {
     entriesDiv.innerHTML += `<h4 class="font-monospace"> -> ${techName}</h4>`
 
     techEntries.forEach(entry => {
-        entriesDiv.innerHTML += `<p class="text-primary" onclick="loadContent('${entry.path}')">${entry.title}</p>`
+        entriesDiv.innerHTML += `<p class="text-primary btn" onclick="loadContent('${entry.path}')">${entry.title}</p>`
     })
 
 })
@@ -17,14 +17,116 @@ function loadContent(path){
     let originalPath = path
     path = 'snippets/' + path + '.html'
     fetch(path).then(data=>{
+        
         if(data.ok|| data.status == 304) return data.text()
         else return "Not found"
     }).then(data=>{
+        data=data.replaceAll('<check/>', '<check></check>');
+        data=data.replaceAll('<cross/>', '<cross></cross>');
         contentDiv.innerHTML = data
+        alignCodeSections()
+        postProcessContent()
         const url = new URL(window.location.href);
         url.searchParams.set("entry", originalPath.replace('/','_'));
         window.history.replaceState({}, '', url.toString());
     })
+}
+
+function alignCodeSections(){
+    const preelements = document.querySelectorAll('pre')
+
+    // PARA CADA <PRE>
+    for(let pre of preelements)
+    {
+        
+        let preContent = pre.textContent
+        let lines = preContent.split('\n')
+
+        // Cuantos espacios en blanco al inicio tiene la linea que menos de ellos tiene
+        let lessSpacesLineSpaces = null
+
+        // PARA CADA LINEA DENTRO DE UN <PRE>
+        for(let line of lines){
+            
+            let spaces = 0
+            if(line[0]!=' ') break;
+            
+            // PARA CADA CARACTER DENTRO DE LA LINEA
+            for(let char of line){
+                if(char!=' ') {
+                    if(lessSpacesLineSpaces == null) lessSpacesLineSpaces = spaces
+                    if(spaces < lessSpacesLineSpaces){
+                        lessSpacesLineSpaces = spaces
+                    }
+                    break
+                }else{
+                    spaces++
+                }
+            }
+        }
+
+        if(lessSpacesLineSpaces == 0) 
+        {
+            console.log(lessSpacesLineSpaces);
+            continue
+        }
+        else
+        {
+            console.log('fix');
+            let formatted = ''
+
+            // PARA CADA LINEA DENTRO DE UN <PRE>
+            for(let line of lines){
+                formatted += line.slice(lessSpacesLineSpaces) + '\n'
+            }
+            
+            pre.textContent=formatted.slice(0, formatted.length-1)
+        }
+    }
+}
+
+function postProcessContent(){
+
+    
+    const filesElement = contentDiv.querySelectorAll('file')
+    for(let f of filesElement)
+    {
+        let text = f.textContent;
+        f.outerHTML = '<span class="badge bg-dark">'+text+'</span>'
+    }
+
+    const pathElement = contentDiv.querySelectorAll('path')
+    for(let f of pathElement)
+    {
+        let text = f.textContent;
+        f.outerHTML = '<span class="badge bg-secondary">'+text+'</span>'
+    }
+
+    const checkElement = contentDiv.querySelectorAll('check')
+    for(let f of checkElement)
+    {
+        f.outerHTML = '<span>✅</span>'
+    }
+
+    const crossElement = contentDiv.querySelectorAll('cross')
+    for(let f of crossElement)
+    {
+        f.outerHTML = '<span>❌</span>'
+    }
+
+    const alertElement = contentDiv.querySelectorAll('alert')
+    for(let f of alertElement)
+    {
+        f.outerHTML = '<span>❌</span>'
+    }
+
+    const warningElement = contentDiv.querySelectorAll('warning')
+    for(let f of warningElement)
+    {
+        f.outerHTML = '<div class="warning-box">'+f.innerHTML+'</div>'
+    }
+
+     
 }
 
 const params = new URLSearchParams(window.location.search);

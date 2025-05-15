@@ -1,0 +1,79 @@
+El archivo .htaccess es un archivo de configuración a nivel de directorio 
+es utilizado por Apache HTTP Server para aplicar reglas específicas 
+sin necesidad de modificar el archivo principal de configuración del servidor (httpd.conf). 
+
+Es muy útil en entornos compartidos o donde no se tiene acceso al archivo de configuración principal. 
+
+¿Cómo usar .htaccess?
+
+necesita el modulo rewrite
+
+1- Habilita el uso de .htaccess en Apache
+
+En el archivo de configuración de Apache (/etc/apache2/apache2.conf o /etc/httpd/conf/httpd.conf, dependiendo del sistema), 
+debes permitir que Apache lea archivos .htaccess. Por ejemplo:
+
+
+<Directory /var/www/html>
+    AllowOverride All
+</Directory>
+
+o tambien hacerlo para cada Vhost
+
+Luego reinicia Apache:
+
+sudo systemctl restart apache2
+# o en CentOS/RHEL:
+sudo systemctl restart httpd
+
+✅ ¿Qué permite hacer un .htaccess?
+
+ -> Redirecciones
+
+ Redirect 301 /vieja-url https://ejemplo.com/nueva-url
+
+ -> Reescritura con mod_rewrite:
+ RewriteEngine On
+ RewriteRule ^blog/([0-9]+)$ blog.php?id=$1 [L]
+
+ - > Control de acceso
+
+    Order Deny,Allow
+    Deny from all
+    Allow from 192.168.1.100
+
+-> Proteger con contraseña:
+    AuthType Basic
+    AuthName "Zona restringida"
+    AuthUserFile /ruta/.htpasswd
+    Require valid-user
+
+-> Forzar HTTPS
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+-> Página de error personalizada
+    ErrorDocument 404 /errores/404.html
+
+-> Configurar caché del navegador
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresByType image/jpg "access plus 1 month"
+        ExpiresByType text/css "access plus 1 week"
+    </IfModule>
+
+-> bloquear archivos sensibles
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+
+⚠️ Consideraciones importantes
+
+    1- El uso excesivo de .htaccess puede afectar el rendimiento. 
+        Si tienes acceso al httpd.conf, es mejor aplicar reglas directamente allí.
+
+    2- Siempre verifica que mod_rewrite esté habilitado si vas a usar reglas de reescritura:
+        sudo a2enmod rewrite

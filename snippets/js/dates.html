@@ -21,18 +21,20 @@ const fecha = new Date(año, mes - 1, dia); // Mes va de 0 a 11
 <p>Formatos validos a la hora de crear una fecha</p>
 <pre>
 new Date();                          // Fecha actual
-new Date('2025-05-13');              // ✅ ISO: YYYY-MM-DD
-new Date('2025-05-13T10:30:00');     // ✅ ISO con hora
-new Date(2025, 4, 13);               // ✅ Año, mes (0-based), día
-new Date(1736834400000);             // ✅ Timestamp (milisegundos)
+new Date('2025-05-13');              // <check/> ISO: YYYY-MM-DD
+new Date('2025-05-13T10:30:00');     // <check/> ISO con hora
+new Date(2025, 4, 13);               // <check/> Año, mes (0-based), día
+new Date(1736834400000);             // <check/> Timestamp (milisegundos)
 </pre>
 
-<p>⚠️ No confiables o inconsistentes</p>
-<pre>
-new Date('13/05/2025');      // ❌ Ambiguo (puede fallar según el navegador o región)
-new Date('05-13-2025');      // ❌ Puede interpretarse como MM-DD-YYYY o dar error
-new Date('13-05-2025');      // ❌ No funciona, JS no entiende DD-MM-YYYY
-</pre>
+<warning>
+  <p>⚠️ No confiables o inconsistentes</p>
+  <pre>
+new Date('13/05/2025');      // <cross/> Ambiguo (puede fallar según el navegador o región)
+new Date('05-13-2025');      // <cross/> Puede interpretarse como MM-DD-YYYY o dar error
+new Date('13-05-2025');      // <cross/> No funciona, JS no entiende DD-MM-YYYY
+  </pre>
+</warning>
 
 <!-- TITULO -->
 <h3>Comparar fechas</h3>

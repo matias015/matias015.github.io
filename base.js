@@ -63,3 +63,9 @@ HTMLElement.prototype._addHtml = function(html){
     this.innerHTML+=html
     return this
 }
+
+HTMLElement.prototype._transform = function(tag){
+    let content = this.innerHTML;
+    this.outerHTML = `<${tag}>${content}</${tag}>`
+    return this
+}

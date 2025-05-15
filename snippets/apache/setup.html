@@ -1,0 +1,195 @@
+<h3>Instalar Apache</h3>
+
+<p>El proceso de instalacion y puesta en marcha en este caso es en ubuntu pero en demas distribuciones es similar, pueden variar nombres de directorios o componentes externos, como firewall</p>
+<pre>
+sudo apt update
+sudo apt upgrade -y
+sudo apt install apache2 -y
+</pre>
+
+<p>Para saber si esta corriendo usar</p>
+<pre>
+sudo systemctl status apache2
+</pre>
+
+<h3>Configurar firewall UFW</h3>
+<p>Permite tráfico HTTP y HTTPS si estás usando el firewall UFW:</p>
+<pre>
+sudo ufw allow 'Apache Full'
+sudo ufw enable
+sudo ufw status
+</pre>
+
+<h3>Habilitar modulos</h3>
+<p>Modulos utiles que probablemente necesitemos</p>
+<pre>
+sudo a2enmod rewrite
+sudo a2enmod ssl
+sudo a2enmod headers
+sudo systemctl restart apache2
+</pre>
+
+<h3>Configurar un virtual host</h3>
+<p>
+    Tenemos 2 opciones para servir las aplicaciones <br><br>
+    1. usar un DocumentRoot global en <file>/etc/apache2/apache2.conf</file> y desactivando todos los virtual host con
+    <pre>sudo a2dissite 000-default.conf<br>sudo systemctl reload apache2</pre>
+
+
+    2. Crear virtual hosts <br>
+
+    Los virtual host son archivos de conf que permiten tener varios sitios web en un solo servidor <br>
+    Apache ya trae uno por defecto que ya veremos
+
+</p>
+
+
+<h3>Configurar virtual host</h3>
+<p>Como ya vimos, podemos desactivar los vhost y setear un valor de DocumentRoot, y asi simplemente hacer que apache sirva cualquier cosa dentro de una carpeta</p>
+<p>Pero lo mejor es usar vhosts, que son archivos donde se definen configuraciones de los diferentes sitios</p>
+<p>Es similar a tener un json que diga</p>
+
+<pre>
+    [
+        {
+            'port': 80,
+            'serverName': www.miapp.com
+            'documentRoot': /opt/apps/miapp
+        },{
+            'port': 433,
+            'serverName': www.miapp.com,
+            'documentRoot': /opt/apps/miapp,
+            'SSLEngine': true,
+            'SSLCertificate': /etc/...
+        },{
+            'port': 80,
+            'serverName': other.miapp.com
+            'documentRoot': /opt/apps/miotherapp
+        },
+        
+    ]
+</pre>
+
+<p>Donde el server name es una clave que se buscara matchear al recibir una peticion, como pasa con las rutas de una app web</p>
+
+<p>Entonces asi podemos tener configuraciones que digan, si la url es x sirve esta configuracion, si y esta otra.</p>
+
+<p>Estos vhost se configuran en <path>/etc/apache2/sites-available</path> y por lo general, al instalar apache2, ya se crea uno por defecto en <file>/etc/apache2/sites-available/000-default.conf</file></p>
+
+<pre>
+&lt;VirtualHost *:80&gt;
+    #ServerName mi.app.com
+    DocumentRoot /opt/my/apps
+
+    ErrorLog ${APACHE_LOG_DIR}/miapp1_error.log
+    CustomLog ${APACHE_LOG_DIR}/miapp1_access.log combined
+&lt;/VirtualHost&gt;
+</pre>
+
+<p>En DocumentRoot va el dir que queremos servir, por ejemplo, /opt/mysites o /home/mywebsite. por defecto es el htdocs de apache</p>
+
+<p>Si no seteamos server name, como es el caso del default actuara como fallback, es decir, si ninguno matchea se usa este.<br>
+    Solo con esta conf default, ya podemos acceder a la app mediante ip/myapp o mi.dominio.com/myapp</p>
+
+<p>Si tengo varios sitios, por ejemplo, en /opt/mysites/... y no quiero estar especificandoo en la url a cual acceder
+    por ejemplo misite.com/myapp1 o misite.com/myapp2, o simplemente no quieroo que misite.com sirva como un acceso al root de todos los proyectos
+    podemos crear mas vhost</p>
+
+<p>supongamos que crearemos el acceso en myapp1.misite.com, y myapp2.misite.com o incluso si tuvieramos 2 dominios apuntando al mismo server</p>
+
+<p>Creariamos en /etc/apache2/sites-available/ un archivo <file>myapp1.misite.com.conf</file> y meteriamos esto:</p>
+
+<pre>
+    &lt;VirtualHost *:80&gt;
+        ServerName myapp1.misite.com
+        DocumentRoot /opt/mysites/myapp1
+
+        &lt;Directory /opt/mysites/myapp1&gt;
+            Options Indexes FollowSymLinks
+            AllowOverride All
+            Require all granted
+        &lt;/Directory&gt;
+
+        ErrorLog ${APACHE_LOG_DIR}/miapp1_error.log
+        CustomLog ${APACHE_LOG_DIR}/miapp1_access.log combined
+    &lt;/VirtualHost&gt;
+</pre>
+    
+<p>El tag directory sirve para definir propiedades de acceso, si no lo usamos, obtendremos un forbiden y acceso no permitido al ingresar.</p>
+
+<p>Aun no podemos acceder a myapp1.misite.com, primero debemos habilitarlo. <br>
+    Para ello colocaremos el archivo de conf en el directorio /etc/apache2/sites-enabled/ <br>
+    Aunque no moveremos el archivo ni haremos una copia, sino que haremos un enlace simbolico</p>
+    
+<p>Podemos hacerlo con un comando de apache</p>
+<pre>
+$ sudo a2ensite myapp1.misite.com.conf
+</pre>
+    
+<p>Luego al hacer reload o restart al servicio de apache podremos acceder. Lo mismo seria con myapp2.misite.com.conf</p>
+    
+<p>Haciendo esto podremos:</p>
+<ul>
+   <li>Acceder a app2 mediante myapp2.misite.com</li>
+    <li>Acceder a /opt/mysites accediendo con la ip del servidor, ya que no matcheara con ningun server name y caera en el 000-default</li>
+</ul>
+  
+<p>Si queremos acceder a algun sitio usando la ip, por ejemplo 53.133.39.133/myapp1, en versiones modernas no podremos por no tener permisos.
+<br>
+    esto se debe a una configuracion de apache en /etc/apache2/apache2.conf
+</p>
+<pre>
+&lt;Directory /&gt;
+    AllowOverride None
+    Require all denied
+&lt;/Directory&gt;
+</pre>
+    
+<p>simplemente debemos agregar a nuestro archivo 000-default.conf el permiso a dichas carpetas:</p>
+    
+<pre>
+&lt;Directory /opt/mysites/app1&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+&lt;/Directory&gt;
+
+y
+
+&lt;Directory /opt/mysites/app2&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+&lt;/Directory&gt;
+</pre>
+
+<p>Tambien se podria añadir al archivo apache2.conf esta linea, aunque no es recomendable</p>    
+
+<pre>
+&lt;Directory /opt&gt;
+    Require all granted
+&lt;/Directory&gt;
+</pre>
+    
+
+<h3>Puertos</h3>
+
+<p>Si queremos usar puertos diferentes al 80 y 433 debemos modificar el /etc/apache2/ports.conf y agregar:</p>
+    
+<pre>
+Listen 8080
+Listen 9090
+</pre>
+
+<h3>Modulos php</h3>
+<p>Si usamos phpinfo podremos encontrar 2 cosas importantes</p>
+    
+<ul>
+    <li>Loaded Configuration File: que es el archivo php.ini que se esta usando, por ej /etc/php/7.4/apache2/php.ini</li>
+    <li>extension_dir: es el directorio donde estan las extensiones .so o .dll de, suele ser algo como: php/usr/lib/php/20190902</li>
+</ul>
+
+<p>Si queremos instalar una extension nueva, debemos obtener los .so o .dll de ella, montarla en ese directorio y activarla en .ini con extension=nombre_archivo_ext.so</p>
+<p>Tambien hay otro directorio donde se pueden cargar modulos, aunque es menos comun <br> 
+    solo preocurar que no funcionen ambos a la vez y no cargar modulos 2 veces</p>
+    
