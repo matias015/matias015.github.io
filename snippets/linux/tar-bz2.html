@@ -1,0 +1,35 @@
+<h1>.tar.bz2</h1>
+
+<h3>.tar y bz2</h3>
+
+<p>Es un archivo tar comprimido con Bzip2.</p>
+<p>Es similar a .tar.gz, pero usa Bzip2 en lugar de Gzip, lo que generalmente comprime mejor pero más lento.</p>
+
+<pre>archivo.tar + compresión Bzip2 = archivo.tar.bz2</pre>
+
+<h3>Comprimir en .tar.bz2</h3>
+<pre>tar -cjvf archivo.tar.bz2 carpeta/</pre>
+<ul>
+    <li><path>-c</path>: crear archivo tar</li>
+    <li><path>-j</path>: comprimir con bzip2</li>
+    <li><path>-v</path>: verbose (opcional)</li>
+    <li><path>-f</path>: nombre del archivo resultant</li>
+</ul>
+
+<h3>Descomprimir .tar.bz2</h3>
+<pre>tar -xjvf archivo.tar.bz2</pre>
+<ul>
+    <path><paht>-x</paht>: extraer</path>
+    <path><paht>-j</paht>: descomprimir con bzip2</path>
+</ul>
+
+<h3>¿Qué es .bz2?</h3>
+
+<p>.bz2 es un archivo individual comprimido con Bzip2 (sin tar).</p>
+<p>Similar a .gz, pero usa un algoritmo diferente.</p>
+
+<h3>Comprimir y descomprimir en .bz2</h3>
+<pre>
+    bzip2 archivo.txt
+    bunzip2 archivo.txt.bz2
+</pre>

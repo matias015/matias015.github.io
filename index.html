@@ -14,11 +14,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
   <body class="bg-dark text-light">
-      <h1>SNIPPETS</h1>
+      <div class="container my-5">
+        <h1>SNIPPETS</h1>
+        
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#entriesDiv" aria-expanded="false" aria-controls="entriesDiv">
+          Posts
+        </button>
+      </div>
+
+      <div id="entriesDiv" class="container collapse"></div>
       
-      <div id="entriesDiv"></div>
-      
-      <div id="contentDiv"></div>
+      <div id="contentDiv" class="container"></div>
+
+    <div class="container mt-5 pt-5"> 
+      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+          <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap">
+            <svg class="bi" width="30" height="24" aria-hidden="true">
+              <use xlink:href="#bootstrap"></use>
+            </svg>
+          </a>
+          <span class="mb-3 mb-md-0 text-body-secondary">Fin del sitio!</span>
+        </div> 
+        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex"> 
+          <li class="ms-3">
+            <a class="text-body-secondary" href="#" aria-label="Instagram">
+              <svg class="bi" width="24" height="24" aria-hidden="true">
+                <use xlink:href="#instagram"></use>
+              </svg>
+            </a>
+          </li> 
+          <li class="ms-3">
+            <a class="text-body-secondary" href="#" aria-label="Facebook"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li> </ul> </footer> </div>
 
     <script src="base.js"></script>
     <script src="entries.js"></script>

@@ -92,14 +92,14 @@ function postProcessContent(){
     for(let f of filesElement)
     {
         let text = f.textContent;
-        f.outerHTML = '<span class="badge bg-dark">'+text+'</span>'
+        f.outerHTML = '<span class="badge bg-file">'+text+'</span>'
     }
 
     const pathElement = contentDiv.querySelectorAll('path')
     for(let f of pathElement)
     {
         let text = f.textContent;
-        f.outerHTML = '<span class="badge bg-secondary">'+text+'</span>'
+        f.outerHTML = '<span class="badge bg-file">'+text+'</span>'
     }
 
     const checkElement = contentDiv.querySelectorAll('check')

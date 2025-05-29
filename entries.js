@@ -24,6 +24,26 @@ const Entries = {
         {
             'title': 'Basico',
             'path': 'linux/basic'
+        },
+        {
+            'title': 'Zip files',
+            'path': 'linux/zip'
+        },
+        {
+            'title': 'Rar files',
+            'path': 'linux/rar'
+        },
+        {
+            'title': 'Tar and gz files',
+            'path': 'linux/tar-gz'
+        },
+        {
+            'title': 'Tar and bz2 files',
+            'path': 'linux/tar-bz2'
+        },
+        {
+            'title': 'Busqueda de archivos',
+            'path': 'linux/search'
         }
     ]
 }
