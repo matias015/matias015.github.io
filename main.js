@@ -25,7 +25,7 @@ function loadContent(path){
         data=data.replaceAll('<cross/>', '<cross></cross>');
         contentDiv.innerHTML = data
         alignCodeSections()
-        postProcessContent()
+        postProcessContent(originalPath)
         const url = new URL(window.location.href);
         url.searchParams.set("entry", originalPath.replace('/','_'));
         window.history.replaceState({}, '', url.toString());
@@ -53,13 +53,19 @@ function alignCodeSections(){
             
             // PARA CADA CARACTER DENTRO DE LA LINEA
             for(let char of line){
-                if(char!=' ') {
+                if(char!=' ') 
+                {
                     if(lessSpacesLineSpaces == null) lessSpacesLineSpaces = spaces
-                    if(spaces < lessSpacesLineSpaces){
+                    
+                    if(spaces < lessSpacesLineSpaces)
+                    {
                         lessSpacesLineSpaces = spaces
                     }
+                    
                     break
-                }else{
+                }
+                else
+                {
                     spaces++
                 }
             }
@@ -72,7 +78,6 @@ function alignCodeSections(){
         }
         else
         {
-            console.log('fix');
             let formatted = ''
 
             // PARA CADA LINEA DENTRO DE UN <PRE>
@@ -85,10 +90,10 @@ function alignCodeSections(){
     }
 }
 
-function postProcessContent(){
+function postProcessContent(path){
 
-    
     const filesElement = contentDiv.querySelectorAll('file')
+
     for(let f of filesElement)
     {
         let text = f.textContent;
@@ -124,6 +129,20 @@ function postProcessContent(){
     for(let f of warningElement)
     {
         f.outerHTML = '<div class="warning-box">'+f.innerHTML+'</div>'
+    }
+
+    const imageElement = contentDiv.querySelectorAll('picture')
+    for(let f of imageElement)
+    {
+        let imgName = f.getAttribute('path')
+        console.log(`../assets/${path}/${imgName}`);
+        // return
+        
+        let tag_img = document.createElement('img')
+        tag_img.src = `../assets/${path}/${imgName}`
+        // f.parentElement.insertBefore(tag_img, f)
+        
+        f.outerHTML = `<img data-src="../assets/${path}/${imgName}" src="../assets/${path}/imgs/${imgName}"/>`
     }
 
      

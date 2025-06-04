@@ -45,5 +45,11 @@ const Entries = {
             'title': 'Busqueda de archivos',
             'path': 'linux/search'
         }
+    ],
+    'Git-Github':[
+        {
+            'title': 'The basics',
+            'path': 'git-github/basics'
+        }
     ]
 }
