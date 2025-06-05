@@ -51,5 +51,11 @@ const Entries = {
             'title': 'The basics',
             'path': 'git-github/basics'
         }
+    ],
+    'Postgresql':[
+        {
+            'title': 'Lo basico',
+            'path': 'postgresql/basico'
+        }
     ]
 }

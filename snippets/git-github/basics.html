@@ -26,21 +26,21 @@
 
 <h3>Crear un repositorio local</h3>
 <p>Al crear un nuevo proyecto en un directorio, por ejemplo, en <path>/home/my-apps/test</path> debemos pararnos alli y usar:</p>
-<pre>git init</pre>
+<pre>$ git init</pre>
 <p>Esto creara un directorio oculto dentro del directorio del proyecto donde almacenara la información del repositorio y hará seguimiento de todos los cambios</p>
 
 <h3>Clonar un repositorio de github</h3>
 <p>Si se quiere trabajar en un proyeto existente de github en lugar de uno nuevo, se puede clonar este simpre que sea publico o se tenga acceso a el.</p>
 <pre>
-    git clone https://github.com/octocat/Hello-World.git
+    $ git clone https://github.com/octocat/Hello-World.git
     o si tenemos un directorio ya creado
-    git clone https://github.com/octocat/Hello-World.git mi-carpeta-destino
+    $ git clone https://github.com/octocat/Hello-World.git mi-carpeta-destino
 </pre>
 <p>En el primer ejemplo creará una carpeta llamada <path>Hello-World</path> con el contenido del repositorio en todas sus ramas por lo que podremos hacer chekout para cambiar.</p>
 <p>Al abrir el repo estaras en la rama principal (por ejemplo, main). Y ya esta configurado el repositorio remoto como origin, por si luego quieres hacer push o pull.</p>
 
 <p>Para clonar solo una rama en concreto, por ejemplo la rama <path>desarrollo</path></p>
-<pre>git clone --branch desarrollo --single-branch https://github.com/usuario/mi-proyecto.git</pre>
+<pre>$ git clone --branch desarrollo --single-branch https://github.com/usuario/mi-proyecto.git</pre>
 
 
 <h3>Estados de archivos en Git</h3>
@@ -59,22 +59,39 @@
 <h3>add & commit</h3>
 <p>Puedes registrar cambios (añadirlos al Index) usando</p>
 <pre>
-    git add [filename]
-    git add .
+    $ git add [filename]
+    $ git add .
 </pre>
+
+<p>Podemos deshacer un <path>$ git add .</path> con</p>
+<pre>
+    $ git reset
+    o para un arhivos especifico
+    $ git reset HEAD nombre_archivo
+</pre>
+
 <p>Este es el primer paso en el flujo de trabajo básico. Para hacer commit a estos cambios usa</p>
-<pre>git commit -m "Commit message"</pre>
+<pre>$ git commit -m "Commit message"</pre>
+
+<p>Podemos deshacer el ultimo commit sin perder los cambios con</p>
+<pre>
+    $ git reset --soft HEAD~1
+</pre>
+<p>Si usas --hard borraras los cambios hechos</p>
+<pre>
+    $ git reset --hard HEAD~1 /// ALERTTT
+</pre>
 
 <p>Ahora el archivo esta incluído en el HEAD, pero aún no en tu repositorio remoto.</p>
 
 
 <h3>envío de cambios</h3>
 <p>Tus cambios están ahora en el HEAD de tu copia local. Para enviar estos cambios a tu repositorio remoto ejecuta </p>
-<pre>git push origin master</pre>
+<pre>$ git push origin master</pre>
 <p>Reemplaza master por la rama a la que quieres enviar tus cambios. </p>
 <p>Esto funcionara siempre y cuando, sea un repositorio clonado de github ó si es un repositorio local, hayas agregado ese repositorio remoto como origen en el repo local.</p>
 <p>Si no has clonado un repositorio ya existente y quieres conectar tu repositorio local a un repositorio remoto, usa</p>
-<pre>git remote add origin [server]</pre>
+<pre>$ git remote add origin [server]</pre>
 <p>Donde server es la <path>url</path> del repo</p>
 
 
@@ -84,27 +101,28 @@
 <picture path="branchs.png"></picture>
 
 <p>Crea una nueva rama llamada "feature_x" y cámbiate a ella usando</p>
-<pre>git checkout -b feature_x</pre>
+<pre>$ git checkout -b feature_x</pre>
 <p>vuelve a la rama principal</p>
-<pre> git checkout master</pre>
+<pre> $ git checkout master</pre>
 <p> y borra la rama</p>
-<pre> git branch -d feature_x</pre>
+<pre> $ git branch -d feature_x</pre>
 
 <p>Una rama nueva no estará disponible para los demás a menos que subas (push) la rama a tu repositorio remoto</p>
 
-<pre>git push origin [branch]</pre>
+<pre>$ git push -u origin nombre-rama</pre>
+<p>El <path>-u</path> sirve para que se sincronizen la rama local con la remota, entonces si nos paramos en la rama loca y hacemos <path>$ git push</path> git ya sabra que rama de github usar, sino tendremos que especicarlo</p>
 
 <p>Puedes ver la rama actual usando git branch donde la que esta marcada con un <path>*</path> es la activa.</p>
-<pre>git branch</pre>
+<pre>$ git branch</pre>
 
 
 
 <h3>Actualizar y fusionar</h3>
 <p>Para actualizar tu repositorio local al commit más nuevo, o dicho de otra forma, para obtener la ultima version de un repositorio, ejecuta </p>
-<pre> git pull</pre>
+<pre>$ git pull</pre>
 <p>Esto actualizara la rama que tengas seleccionada y que este vinculada con la del repositorio</p>
 <p>Puedes ver exactamente de qué rama remota estás haciendo pull con</p>
-<pre>git remote show origin</pre>
+<pre>$ git remote show origin</pre>
 <p>Donde deberas buscar la parte que diga algo como:</p>
 <pre>
     Local branch configured for 'git pull':
@@ -112,30 +130,46 @@
 </pre>
 <p>en tu directorio de trabajo para bajar y fusionar los cambios remotos.
 Para fusionar otra rama a tu rama activa (por ejemplo master), utiliza</p>
-<pre> git merge [branch]</pre>
+<pre>$ git merge [branch]</pre>
 <p>en ambos casos git intentará fusionar automáticamente los cambios. Desafortunadamente, no siempre será posible y se podrán producir conflictos. Tú eres responsable de fusionar esos conflictos manualmente al editar los archivos mostrados por git. Después de modificarlos, necesitas marcarlos como fusionados con</p>
-<pre>git add [filename]</pre>
+<pre>$ git add [filename]</pre>
 <p> Antes de fusionar los cambios, puedes revisarlos usando</p>
-<pre> git diff [source_branch] [target_branch] </pre>
+<pre>$ git diff [source_branch] [target_branch] </pre>
 
-
+<p>Importante, al usar <path>merge</path> estamos metiendo los cambios de la rama que pasamos como argumento a la que tenemos seleccionada</p>
+<pre>
+    git checkout engine
+    git merge main
+    // Toma los cambios de main y metelos en engine
+    // o dicho de otra forma, actualiza engine con los cambios que hubo en main
+</pre>
 
 
 <h3>Ciclo básico de trabajo</h3>
 <pre>
-    git status                # Ver el estado de los archivos
-    git add archivo.txt       # Agregar archivo al área de preparación
-    git add .                 # Agregar todos los archivos nuevos o modificados
-    git commit -m "Mensaje"   # Guardar un snapshot con un mensaje
+    $ git status                # Ver el estado de los archivos
+    $ git add archivo.txt       # Agregar archivo al área de preparación
+    $ git add .                 # Agregar todos los archivos nuevos o modificados
+    $ git commit -m "Mensaje"   # Guardar un snapshot con un mensaje
 </pre>
 
 <h3>Ver historial</h3>
-<pre>git log</pre>
+<pre>$ git log</pre>
 <p>Presiona <path>q</path> para salir del historial.</p>
 
 
 <h3>Seleccionar editor por defecto, ej vscode y notepad</h3>
 <pre>
-    git config --global core.editor "code --wait"
-    git config --global core.editor "notepad"
+    $ git config --global core.editor "code --wait"
+    $ git config --global core.editor "notepad"
 </pre>
+
+<h3>Ejemplo de proyecto github</h3>
+<p>Como ejemplo poner este mismo sitio, donde tenemos 3 ramas</p>
+<u>
+    <li><path>main</path> donde esta el codigo completo que sale a producción.</li>
+    <li><path>posts</path> donde se trabaja en los posts.</li>
+    <li><path>core</path> donde se trabaja con el nucle de la app, como el procesador de posts o funcionalidades para facilitar su escritura y mostrarlos en el sitio y demas.</li>
+</u>
+<p>Aquí debemos hacer merge de los cambios en <path>core</path> a la rama <path>main</path> y luego, si queremos hacer uso de nuevas funcionalidades al desarrollar nuevos posts, hacer merge de los cambios ya aplicados a <paht>main</paht> en <path>posts</path></p>
+<p>Tambien podemos hacer <path>merge</path> directamente entre <path>core</path> y <path>posts</path> pero es recomendable no mezclar ramas con propositos diferentes</p>
