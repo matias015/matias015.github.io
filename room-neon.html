@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Verse Club | Fortuna Imperial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-header {
+            height: 60vh;
+            background-image: url('https://images.unsplash.com/photo-1605870445919-838d190e8e1b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, var(--bg-color) 0%, rgba(20, 0, 40, 0.6) 100%);
+        }
+        .page-title { position: relative; z-index: 2; }
+        
+        /* Neon Theme Overrides */
+        :root {
+            --primary-color: #00f3ff; /* Cyan */
+            --secondary-color: #d000ff; /* Purple */
+        }
+        
+        .promo-banner {
+            border-left-color: var(--secondary-color);
+            background: linear-gradient(90deg, #120024, #1f0133);
+        }
+        
+        h1 {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+        }
+        @media(max-width: 900px) { .details-grid { grid-template-columns: 1fr; } }
+        
+        .bar-menu-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #333;
+            padding: 0.8rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">F <span style="color:#fff">I</span></a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Volver al Inicio</a></li>
+                <li><a href="#eventos">Eventos</a></li>
+                <li><a href="#bar">Bar</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="page-title fade-in">
+            <h1>Neon Verse Club</h1>
+            <p style="font-size: 1.2rem; margin-top: 1rem; color: #fff;">El futuro del juego</p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <div class="details-grid">
+                
+                <!-- Main Content -->
+                <div class="left-col">
+                    
+                    <!-- Promotions -->
+                    <h2 style="text-align: left; margin-bottom: 2rem; color: #00f3ff;">Promociones Cyber</h2>
+                    <div class="promo-banner fade-in">
+                        <div class="promo-tag" style="background-color: #00f3ff; color: #000;">Happy Hour</div>
+                        <h3 style="margin: 0.5rem 0;">Slots al 110%</h3>
+                        <p>Tus cargas valen un 10% más en todas las máquinas tragamonedas de 20:00 a 22:00.</p>
+                    </div>
+
+                    <div class="promo-banner fade-in" style="animation-delay: 0.2s">
+                        <div class="promo-tag" style="background-color: #d000ff; color: #fff;">Promo Cerveza</div>
+                        <h3 style="margin: 0.5rem 0;">Cerveza + Ticket Ganador</h3>
+                        <p>¡Compra una cerveza y recibe de regalo un Promoticket de $5.000!</p>
+                        <p style="font-size: 0.85rem; color: #aaa; margin-top: 0.5rem;">Jueves 20:00 a 22:00 hrs. (Válido 26/01 al 31/01)</p>
+                    </div>
+
+                    <!-- Events -->
+                    <h2 id="eventos" style="text-align: left; margin: 3rem 0 2rem; color: #00f3ff;">Agenda</h2>
+                    <div class="event-card fade-in" style="border-left: 3px solid #00f3ff;">
+                        <div class="event-date" style="background: #00f3ff;">
+                            <span class="day">30</span>
+                            <span class="month">ENE</span>
+                        </div>
+                        <div class="event-details">
+                            <h3>DJ Cyber Night</h3>
+                            <p>Música electrónica en vivo con DJ invitado internacional.</p>
+                            <div class="event-footer">00:00 hrs - Pista Central</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Info -->
+                <div class="right-col">
+                    <div class="info-item fade-in" style="text-align: left; margin-bottom: 2rem; border-color: #333;">
+                        <h4 style="color: #00f3ff;">🕒 Horarios Non-Stop</h4>
+                        <p>Abierto las 24 Horas<br>Todos los días</p>
+                    </div>
+                    
+                    <div class="info-item fade-in" style="text-align: left; margin-bottom: 2rem; border-color: #333;">
+                        <h4 style="color: #00f3ff;">📍 Ubicación</h4>
+                        <p>Calle Tecnológico 500<br>Zona Norte.</p>
+                        <div style="background: #111; height: 150px; margin-top: 1rem; display: flex; align-items: center; justify-content: center; color: #555; border: 1px solid #222;">
+                            [Mapa Digital]
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Bar CTA Section -->
+    <section id="bar" class="section" style="text-align: center; padding: 6rem 0;">
+        <div class="container fade-in">
+            <h2 style="color: #00f3ff;">Carta Cyber Bar</h2>
+            <p style="color:#aaa; max-width: 600px; margin: 0 auto 2rem;">Bebidas moleculares, tragos que brillan en la oscuridad y la mejor energía para tu noche de juego.</p>
+            <a href="bar-neon.html" class="btn" style="background-color: #00f3ff; color: #000; box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);">Ver Menú Galáctico</a>
+        </div>
+    </section>
+
+    <footer style="border-top: 1px solid #222; margin-top:0;">
+        <div class="container" style="padding-top: 3rem;">
+            <p>&copy; 2026 Fortuna Imperial - Neon Verse</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

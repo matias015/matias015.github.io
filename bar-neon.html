@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Cyber Bar | Neon Verse Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-header {
+            height: 40vh;
+            background-image: url('https://images.unsplash.com/photo-1575279093375-30dbca744d2d?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, var(--bg-color) 0%, rgba(20, 0, 40, 0.6) 100%);
+        }
+        .page-title { position: relative; z-index: 2; }
+        
+        /* Neon Theme Overrides */
+        :root {
+            --primary-color: #00f3ff; /* Cyan */
+            --secondary-color: #d000ff; /* Purple */
+        }
+        
+        h1 {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">F <span style="color:#fff">I</span></a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="room-neon.html">◀ Volver a la Sala</a></li>
+                <li><a href="index.html">Inicio</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="page-title fade-in">
+            <h1>Carta Cyber Bar</h1>
+            <p style="font-size: 1.2rem; margin-top: 1rem; color: #fff;">Neon Verse Club</p>
+        </div>
+    </header>
+
+    <section id="bar" class="section">
+        <div class="container">
+            <h2 style="text-align: center; color: #00f3ff;">Menú Galáctico</h2>
+            <div class="visual-menu-grid">
+                
+                <article class="menu-card fade-in">
+                    <div class="menu-img-placeholder" style="background:#111; color: #00f3ff; border-color: #333;">[Neon Shot Img]</div>
+                    <div class="menu-card-content">
+                        <h4 style="color: #00f3ff;">Neon Shot</h4>
+                        <p class="desc">Chupito brillante con licor de melón y curaçao azul bajo luz UV.</p>
+                        <span class="price" style="color: #d000ff">$8.00</span>
+                    </div>
+                </article>
+
+                <article class="menu-card fade-in" style="animation-delay: 0.1s">
+                    <div class="menu-img-placeholder" style="background:#111; color: #00f3ff; border-color: #333;">[Energy Mix Img]</div>
+                    <div class="menu-card-content">
+                        <h4 style="color: #00f3ff;">Energy Mix</h4>
+                        <p class="desc">Vodka premium mezclado con bebida energética secreta.</p>
+                        <span class="price" style="color: #d000ff">$10.00</span>
+                    </div>
+                </article>
+
+                <article class="menu-card fade-in" style="animation-delay: 0.2s">
+                    <div class="menu-img-placeholder" style="background:#111; color: #00f3ff; border-color: #333;">[Nachos Img]</div>
+                    <div class="menu-card-content">
+                        <h4 style="color: #00f3ff;">Nachos Galácticos</h4>
+                        <p class="desc">Nachos con queso fundido azul, jalapeños y carne.</p>
+                        <span class="price" style="color: #d000ff">$15.00</span>
+                    </div>
+                </article>
+
+                <article class="menu-card fade-in" style="animation-delay: 0.3s">
+                    <div class="menu-img-placeholder" style="background:#111; color: #00f3ff; border-color: #333;">[Cyber Beer Img]</div>
+                    <div class="menu-card-content">
+                        <h4 style="color: #00f3ff;">Cyber Cerveza</h4>
+                        <p class="desc">Cerveza lager servida en vaso led reactivo al sonido.</p>
+                        <span class="price" style="color: #d000ff">$9.00</span>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <footer style="border-top: 1px solid #222;">
+        <div class="container" style="padding-top: 3rem;">
+            <p>&copy; 2026 Fortuna Imperial - Neon Verse</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
