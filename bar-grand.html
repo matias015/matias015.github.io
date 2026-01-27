@@ -56,55 +56,138 @@
 
     <section id="bar" class="section">
         <div class="container">
-            <h2 style="text-align: center;">Cocktails & Bebidas</h2>
-            <div class="visual-menu-grid">
-                
-                <article class="menu-card fade-in">
-                    <div class="menu-img-placeholder">[Imagen Cocktail]</div>
-                    <div class="menu-card-content">
-                        <h4>Old Fashioned</h4>
-                        <p class="desc">Bourbon premium, azúcar, angostura y piel de naranja.</p>
-                        <span class="price">$12.00</span>
-                    </div>
-                </article>
+            <h2 style="text-align: center; margin-bottom: 3rem;">Carta Completa</h2>
+            
+            <style>
+                .menu-category { margin-bottom: 3rem; }
+                .menu-category h3 { 
+                    color: var(--primary-color); 
+                    border-bottom: 1px solid #444; 
+                    padding-bottom: 0.5rem; 
+                    margin-bottom: 1.5rem;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                }
+                .menu-list { display: grid; gap: 1rem; }
+                .menu-item { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    align-items: flex-end;
+                }
+                .menu-item .name { font-weight: 500; font-size: 1.1rem; }
+                .menu-item .dots { 
+                    flex-grow: 1; 
+                    border-bottom: 1px dotted #555; 
+                    margin: 0 1rem 0.4rem 1rem;
+                    opacity: 0.5;
+                }
+                .menu-item .price { 
+                    font-weight: 700; 
+                    color: #fff; 
+                    font-size: 1.1rem; 
+                    white-space: nowrap;
+                }
+                @media(max-width: 600px) {
+                    .menu-item { font-size: 0.9rem; }
+                    .menu-item .name { max-width: 70%; }
+                }
+            </style>
 
-                <article class="menu-card fade-in" style="animation-delay: 0.1s">
-                    <div class="menu-img-placeholder">[Imagen Martini]</div>
-                    <div class="menu-card-content">
-                        <h4>Martini Dry</h4>
-                        <p class="desc">Ginebra seca, vermut y aceituna. Clásico y elegante.</p>
-                        <span class="price">$12.00</span>
-                    </div>
-                </article>
-
-                <article class="menu-card fade-in" style="animation-delay: 0.2s">
-                    <div class="menu-img-placeholder">[Imagen Whisky]</div>
-                    <div class="menu-card-content">
-                        <h4>Whisky 18 Años</h4>
-                        <p class="desc">Selección de los mejores reservas escoceses.</p>
-                        <span class="price">$25.00</span>
-                    </div>
-                </article>
-
-                <article class="menu-card fade-in" style="animation-delay: 0.3s">
-                    <div class="menu-img-placeholder">[Imagen Cerveza]</div>
-                    <div class="menu-card-content">
-                        <h4>Cerveza Artesanal</h4>
-                        <p class="desc">Rubia, roja o negra. Elaboración local.</p>
-                        <span class="price">$8.00</span>
-                    </div>
-                </article>
-
-                <article class="menu-card fade-in" style="animation-delay: 0.4s">
-                    <div class="menu-img-placeholder">[Imagen Champagne]</div>
-                    <div class="menu-card-content">
-                        <h4>Champagne Brut</h4>
-                        <p class="desc">Botella para celebraciones especiales.</p>
-                        <span class="price">$120.00</span>
-                    </div>
-                </article>
-
+            <div class="menu-category fade-in">
+                <h3>Bebidas sin Alcohol</h3>
+                <div class="menu-list">
+                    <div class="menu-item"><span class="name">Seven x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Seven Free x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pepsi x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pepsi Zero x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Tónica Lata</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Mirinda x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Paso de los Toros Pomelo x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Speed Energy Drink</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Fresh Manzana x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Fresh Naranja x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Fresh Pomelo x 500cc</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                </div>
             </div>
+
+            <div class="menu-category fade-in">
+                <h3>Cervezas</h3>
+                <div class="menu-list">
+                    <div class="menu-item"><span class="name">Stella Artois x 330cc</span><span class="dots"></span><span class="price">$ 4.000,00</span></div>
+                    <div class="menu-item"><span class="name">Stella Artois Premium x 330cc</span><span class="dots"></span><span class="price">$ 4.500,00</span></div>
+                    <div class="menu-item"><span class="name">Stella Artois Lata x 473cc</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                    <div class="menu-item"><span class="name">Stella Artois Lata Selección x 473cc</span><span class="dots"></span><span class="price">$ 5.500,00</span></div>
+                    <div class="menu-item"><span class="name">Brahma Lata x 473cc</span><span class="dots"></span><span class="price">$ 4.500,00</span></div>
+                    <div class="menu-item"><span class="name">Brahma Lata x 330cc</span><span class="dots"></span><span class="price">$ 3.500,00</span></div>
+                    <div class="menu-item"><span class="name">Quilmes Lata x 473cc</span><span class="dots"></span><span class="price">$ 4.500,00</span></div>
+                    <div class="menu-item"><span class="name">Quilmes Lata x 330cc</span><span class="dots"></span><span class="price">$ 3.500,00</span></div>
+                    <div class="menu-item"><span class="name">Corona x 330cc</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                </div>
+            </div>
+
+            <div class="menu-category fade-in">
+                <h3>Tragos & Espirituosas</h3>
+                <div class="menu-list">
+                    <div class="menu-item"><span class="name">Amarula (Medida)</span><span class="dots"></span><span class="price">$ 8.500,00</span></div>
+                    <div class="menu-item"><span class="name">Coñac Otard Dupuy</span><span class="dots"></span><span class="price">$ 6.000,00</span></div>
+                    <div class="menu-item"><span class="name">Fernet con Cola (220cc)</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                    <div class="menu-item"><span class="name">Fernet con Cola (500cc)</span><span class="dots"></span><span class="price">$ 8.500,00</span></div>
+                    <div class="menu-item"><span class="name">Gancia Batido (220cc)</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                    <div class="menu-item"><span class="name">Gin Beefeater</span><span class="dots"></span><span class="price">$ 5.500,00</span></div>
+                    <div class="menu-item"><span class="name">Tía María Cream</span><span class="dots"></span><span class="price">$ 6.000,00</span></div>
+                    <div class="menu-item"><span class="name">Trago Campari</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                    <div class="menu-item"><span class="name">Vodka Nacional c/ Speed</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                    <div class="menu-item"><span class="name">Chandon 187</span><span class="dots"></span><span class="price">$ 9.000,00</span></div>
+                    <div class="menu-item"><span class="name">Chandon Extra Brut</span><span class="dots"></span><span class="price">$ 23.000,00</span></div>
+                </div>
+            </div>
+
+            <div class="menu-category fade-in">
+                <h3>Minutas & Snacks</h3>
+                <div class="menu-list">
+                    <div class="menu-item"><span class="name">Empanada Jamón y Queso (Sin TACC)</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Empanada Verdura (Sin TACC)</span><span class="dots"></span><span class="price">$ 3.000,00</span></div>
+                    <div class="menu-item"><span class="name">Sándwich de Milanesa de Carne</span><span class="dots"></span><span class="price">$ 15.000,00</span></div>
+                    <div class="menu-item"><span class="name">Sándwich de Milanesa de Pollo</span><span class="dots"></span><span class="price">$ 15.000,00</span></div>
+                    <div class="menu-item"><span class="name">Tostado de Jamón y Queso</span><span class="dots"></span><span class="price">$ 7.000,00</span></div>
+                    <div class="menu-item"><span class="name">Guarnición de Papas Rebozadas</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                    <div class="menu-item"><span class="name">Papas Rebozadas con Cheddar</span><span class="dots"></span><span class="price">$ 16.000,00</span></div>
+                    <div class="menu-item"><span class="name">Puré de Papa</span><span class="dots"></span><span class="price">$ 5.000,00</span></div>
+                </div>
+            </div>
+
+            <div class="menu-category fade-in">
+                <h3>Platos Principales</h3>
+                <div class="menu-list">
+                    <div class="menu-item"><span class="name">Milanesa Napolitana Carne + Postre</span><span class="dots"></span><span class="price">$ 18.000,00</span></div>
+                    <div class="menu-item"><span class="name">Milanesa Napolitana Pollo + Postre</span><span class="dots"></span><span class="price">$ 18.000,00</span></div>
+                    <div class="menu-item"><span class="name">Milanesa Napolitana Carne (Sola)</span><span class="dots"></span><span class="price">$ 12.000,00</span></div>
+                    <div class="menu-item"><span class="name">Milanesa Napolitana Pollo (Sola)</span><span class="dots"></span><span class="price">$ 12.000,00</span></div>
+                    <div class="menu-item"><span class="name">Milanesa Carne (Sola)</span><span class="dots"></span><span class="price">$ 10.000,00</span></div>
+                    <div class="menu-item"><span class="name">Milanesa Pollo (Sola)</span><span class="dots"></span><span class="price">$ 10.000,00</span></div>
+                    <div class="menu-item"><span class="name">Milanesa con Guarnición</span><span class="dots"></span><span class="price">$ 16.000,00</span></div>
+                    <div class="menu-item"><span class="name">Canelones de Pollo con Bolognesa</span><span class="dots"></span><span class="price">$ 17.000,00</span></div>
+                    <div class="menu-item"><span class="name">Canelones Verdura (Sin TACC)</span><span class="dots"></span><span class="price">$ 15.000,00</span></div>
+                    <div class="menu-item"><span class="name">Sorrentinos de Jamón y Queso</span><span class="dots"></span><span class="price">$ 14.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pollo al Champiñón con Papas</span><span class="dots"></span><span class="price">$ 18.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pastel de Papas (Porción)</span><span class="dots"></span><span class="price">$ 15.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pizza Individual Jamón y Morrón</span><span class="dots"></span><span class="price">$ 15.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pizza Individual Muzzarella</span><span class="dots"></span><span class="price">$ 10.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pizza Individual Napolitana</span><span class="dots"></span><span class="price">$ 15.000,00</span></div>
+                    <div class="menu-item"><span class="name">Pizza Muzzarella (Sin TACC)</span><span class="dots"></span><span class="price">$ 12.000,00</span></div>
+                    <div class="menu-item"><span class="name">Ensalada César</span><span class="dots"></span><span class="price">$ 16.000,00</span></div>
+                    <div class="menu-item"><span class="name">Ensalada de Lechuga y Tomate</span><span class="dots"></span><span class="price">$ 6.000,00</span></div>
+                    <div class="menu-item"><span class="name">Ensalada de Rúcula y Parmesano</span><span class="dots"></span><span class="price">$ 12.000,00</span></div>
+                </div>
+            </div>
+
+            <div class="menu-category fade-in">
+                <h3>Postres</h3>
+                <div class="menu-list">
+                    <div class="menu-item"><span class="name">Cassata</span><span class="dots"></span><span class="price">$ 2.500,00</span></div>
+                </div>
+            </div>
+
         </div>
     </section>
 
