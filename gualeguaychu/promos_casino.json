@@ -1,0 +1,14 @@
+[
+    {
+        "titulo": "Sorteo de Bienvenida",
+        "descripcion": "¡Ganá hasta $500.000 en premios instantáneos!",
+        "dias": "Todos los días",
+        "imagen": "gualeguaychu/imagenes/image-1.jpeg"
+    },
+    {
+        "titulo": "Triple Chance",
+        "descripcion": "Multiplica tus chances jugando en nuestras máquinas seleccionadas.",
+        "dias": "Martes y Jueves",
+        "imagen": "gualeguaychu/imagenes/image-2.jpeg"
+    }
+]

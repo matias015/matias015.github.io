@@ -1,0 +1,7 @@
+{
+    "direccion": "San Martin 230",
+    "cantidad_maquinas": 231,
+    "cantidad_ruletas": 14,
+    "horarios": "Domingo a Jueves 10 a 03hs y Viernes y Sábados de 10 a 04hs.",
+    "numero": "https://api.whatsapp.com/send/?phone=5493446511656"
+}

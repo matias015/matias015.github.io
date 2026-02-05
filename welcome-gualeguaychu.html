@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido | Casino Gualeguaychú</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .welcome-hero {
+            height: 60vh;
+            min-height: 400px;
+            background-image: url('https://casinoji.si/wp-content/uploads/2024/05/slide-1-1536x1022.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+        
+        .welcome-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, #050505 0%, rgba(5,5,5,0.4) 100%);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .stats-bar {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--primary-color);
+            border-bottom: 1px solid var(--primary-color);
+            padding: 2rem 0;
+            margin-top: -3rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .content-section {
+            padding: 4rem 0;
+        }
+
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 1.5rem;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #222;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: #222;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .card-mini {
+            min-width: 280px;
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card-mini h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-mini p {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .welcome-btn-container {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.05) 100%);
+        }
+
+        .pulse-btn {
+            animation: pulse-shadow 2s infinite;
+        }
+
+        /* Clear Section Separators */
+        .section-separator {
+            padding: 4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .bg-darker { background-color: #050505; }
+        .bg-lighter { background-color: #121212; }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 20px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* Carousel Styles Updated */
+        .carousel-view {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-out;
+            gap: 20px; /* Space between slides */
+            padding: 20px 0; /* Space for shadow/hover effects */
+        }
+
+        .carousel-slide {
+            flex-shrink: 0;
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+            /* width is set via JS */
+        }
+
+        .carousel-slide:hover {
+            transform: translateY(-5px);
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(0deg, #000 0%, rgba(0,0,0,0.9) 30%, transparent 100%);
+            padding: 1.5rem;
+            color: white;
+            pointer-events: none;
+        }
+
+        /* Portrait styling override removal - fully handled by JS sizing now */
+        #events-carousel { aspect-ratio: auto; max-width: none; }
+        
+        /* Info Grid Styles (Text Heavy) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        @media (max-width: 768px) {
+             .info-grid { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
+        .info-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+            position: relative;
+        }
+        .info-card h4 { color: var(--primary-color); font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .info-card p { color: #d0d0d0; line-height: 1.5; font-size: 1rem; }
+        .info-card .meta { display: block; margin-top: 1rem; font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+        .promo-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .promo-item:last-child { border-bottom: none; }
+        .promo-icon { font-size: 1.5rem; color: var(--secondary-color); min-width: 40px; text-align: center; }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .section-separator {
+                padding: 2rem 0;
+            }
+            .section-title {
+                font-size: 1.6rem;
+                margin-bottom: 1.5rem;
+            }
+            .welcome-hero {
+                height: 45vh;
+                min-height: 300px; 
+            }
+            .stat-item h3 {
+                font-size: 2rem;
+            }
+            .carousel-dot {
+                width: 12px; /* Bigger touch target */
+                height: 12px;
+                margin: 0 4px;
+            }
+            .carousel-dot.active {
+                width: 25px;
+            }
+            /* Ensure cards take full width nicely */
+            .carousel-container, .carousel-view {
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="welcome-hero">
+        <div class="container welcome-content">
+            <span style="color: var(--primary-color); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; font-size: 0.9rem;">Estás conectado en</span>
+            <h1 style="margin-bottom: 0; font-size: 2.5rem; line-height: 1.1;">Casino Gualeguaychú</h1>
+        </div>
+    </header>
+
+    <!-- AREA 1: SHOWS & ENTRETENIMIENTO -->
+    <section class="section-separator bg-darker">
+        <div class="container">
+            <h2 class="section-title">Shows & Espectáculos</h2>
+            <p style="color:#aaa; margin-bottom: 1.5rem; margin-top: -1rem; padding-left: 20px; font-size: 0.95rem;">Los mejores artistas en vivo.</p>
+            
+            <!-- Reservation Button (Hidden by default, shown via JS) -->
+            <div style="padding-left: 20px; margin-bottom: 1.5rem; margin-top: -1rem;">
+                <a id="show-reservation-link" href="#" target="_blank" style="display:none; background:#25D366; color:white; font-weight:bold; font-size:0.9rem; padding: 8px 16px; border-radius:20px; text-decoration:none; align-items:center; width:fit-content; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    <span style="font-size:1.1rem; margin-right:5px;">📱</span> Reservar Lugar
+                </a>
+            </div>
+            
+            <div id="events-carousel" class="carousel-view">
+                <div class="carousel-track"></div>
+            </div>
+            <div class="carousel-nav" id="events-nav"></div>
+
+            <div style="margin-top: 4rem;"></div>
+
+            <!-- 2. INFO & LOCATION -->
+            <h2 class="section-title">Información</h2>
+            <div class="info-grid" style="grid-template-columns: 1fr; margin-bottom: 3rem;">
+                 <!-- General Info (Full width or contained) -->
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #fff; font-size: 1.4rem;">📍 Visítanos</h3>
+                    <div class="info-card">
+                        <p id="info-address" style="font-size: 1.1rem; color: white; margin-bottom: 0.5rem;">Cargando dirección...</p>
+                        <p id="info-hours" style="color: var(--primary-color); font-weight: bold;">...</p>
+                        
+                        <div class="stat-mini-row" style="display: flex; gap: 2rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div>
+                                <span id="info-machines" style="font-size:1.8rem; color:white; font-weight:900; line-height: 1;">-</span>
+                                <span style="display:block; font-size:0.8rem; color:#888; text-transform: uppercase;">Slots</span>
+                            </div>
+                             <div>
+                                <span id="info-roulettes" style="font-size:1.8rem; color:white; font-weight:900; line-height: 1;">-</span>
+                                <span style="display:block; font-size:0.8rem; color:#888; text-transform: uppercase;">Ruletas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. GALLERY (Visual Break) -->
+            <div style="margin: 3rem 0;">
+                <h3 style="margin-bottom: 1.5rem; color: #fff; font-size: 1.4rem; padding-left: 10px; border-left: 3px solid #fff;">📸 Nuestras Salas</h3>
+                <div id="gallery-carousel" class="carousel-view">
+                    <div class="carousel-track"></div>
+                </div>
+                <div class="carousel-nav" id="gallery-nav"></div>
+            </div>
+
+            <!-- 4. PROMOS & SORTEOS (Text Heavy) -->
+            <div class="info-grid" style="margin-top: 3rem;">
+                
+                <!-- Sorteos -->
+                <div>
+                    <h3 style="margin-bottom: 1.5rem; color: #fff; font-size: 1.4rem;">🏆 Sorteos Vigentes</h3>
+                    <div id="raffles-list">
+                        <p style="color:#666">Cargando sorteos...</p>
+                    </div>
+                </div>
+
+                <!-- Promos -->
+                <div>
+                    <h3 style="margin-bottom: 1.5rem; color: #fff; font-size: 1.4rem;">⚡ Promociones</h3>
+                    <div id="promos-list" style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 12px;">
+                        <p style="color:#666">Cargando promociones...</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- AREA 4: RESTAURANT -->
+    <section class="section-separator bg-lighter">
+        <div class="container">
+            <h2 class="section-title">Bar & Gastronomía</h2>
+            <div id="menu-carousel" class="carousel-view">
+                <div class="carousel-track"></div>
+            </div>
+            <div class="carousel-nav" id="menu-nav"></div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="bar-grand.html" class="btn btn-secondary">VER CARTA COMPLETA</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- <div class="welcome-btn-container">
+        <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">Descubre todo lo que tenemos para vos</h2>
+        <a href="casino-gualeguaychu.html" class="btn pulse-btn" style="padding: 18px 30px; font-size: 1.1rem; width: 90%;">IR AL SITIO COMPLETO</a>
+        <br>
+        <a href="index.html" style="display: inline-block; margin-top: 1.5rem; color: #666; font-size: 0.9rem; text-decoration: underline;">Volver al inicio de Euforia</a>
+    </div> -->
+
+    <script>
+        // Info Header - Updated to target new Info Grid elements
+        fetch('gualeguaychu/info.json')
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('info-address').textContent = data.direccion;
+            document.getElementById('info-hours').textContent = data.horarios;
+            document.getElementById('info-machines').textContent = data.cantidad_maquinas;
+            document.getElementById('info-roulettes').textContent = data.cantidad_ruletas;
+
+            // WhatsApp Reservation Link
+            const reserveBtn = document.getElementById('show-reservation-link');
+            if(data.numero && reserveBtn) {
+                // The JSON already contains the full URL
+                reserveBtn.href = data.numero; 
+                reserveBtn.style.display = 'inline-flex';
+            }
+        });
+
+        /**
+         * Enhanced Carousel Function
+         * @param {string} containerId - The ID of the container div
+         * @param {string} navId - The ID of the nav div
+         * @param {Array} data - Array of data items
+         * @param {Function} renderContent - Function returning HTML string for slide content
+         * @param {Object} options - { itemsPerView: number, aspectRatio: string }
+         */
+        function initMultiCarousel(containerId, navId, data, renderContent, options = {}) {
+            const container = document.getElementById(containerId);
+            const navContainer = document.getElementById(navId);
+            if (!container || !data || data.length === 0) return;
+
+            const track = container.querySelector('.carousel-track');
+            
+            // Mobile Optimization: Strict 1 item per view on mobile
+            const isMobile = window.innerWidth < 768;
+            const itemsPerView = isMobile ? 1 : (options.itemsPerView || 1);
+            const gap = 20;
+            
+            // Calculate width based on items per view
+            // Using calc to account for gaps: (100% - totalGaps) / itemsPerView
+            // For simplicity in JS we'll let CSS handle gap and set flex-basis.
+            
+            data.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                
+                // Style Adjustments
+                slide.style.width = `calc((100% - ${(itemsPerView - 1) * gap}px) / ${itemsPerView})`;
+                if(options.aspectRatio) slide.style.aspectRatio = options.aspectRatio;
+
+                slide.innerHTML = renderContent(item);
+                track.appendChild(slide);
+
+                // Dots (only 1 per group if multiple items, simplified to 1 per item for now)
+                if (index <= data.length - itemsPerView) {
+                     const dot = document.createElement('div');
+                    dot.className = index === 0 ? 'carousel-dot active' : 'carousel-dot';
+                    dot.addEventListener('click', () => scrollToSlide(index));
+                    navContainer.appendChild(dot);
+                }
+            });
+
+            // Logic
+            let currentIndex = 0;
+            const maxIndex = data.length - Math.floor(itemsPerView);
+
+            function scrollToSlide(index) {
+                if (index < 0) index = 0;
+                if (index > maxIndex) index = 0; // Loop back
+                currentIndex = index;
+
+                // Calculate translate distance
+                // slideWidth + gap
+                const slideWidthPct = 100 / itemsPerView; 
+                // We drag by percentage relative to track? No, simpler to scroll item by item
+                // Let's use flexible calculation
+                const itemWidth = track.children[0].offsetWidth;
+                const moveAmount = (itemWidth + gap) * currentIndex;
+                
+                track.style.transform = `translateX(-${moveAmount}px)`;
+
+                // Update dots
+                const dots = navContainer.querySelectorAll('.carousel-dot');
+                dots.forEach((d, i) => {
+                    d.className = i === currentIndex ? 'carousel-dot active' : 'carousel-dot';
+                });
+            }
+            
+            // Auto Play
+            setInterval(() => {
+                scrollToSlide(currentIndex + 1);
+            }, 5000 + Math.random() * 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. SHOWS: 2.5 items per view on desktop (showing previews of adjacent cards)
+            fetch('gualeguaychu/eventos.json').then(r => r.json()).then(data => {
+                initMultiCarousel('events-carousel', 'events-nav', data, (item) => `
+                    <img src="${item.imagen}" alt="${item.artista}">
+                    <div class="slide-caption">
+                        <h4 style="margin:0; font-size:1.1rem; color:var(--primary-color)">${item.artista}</h4>
+                        <small style="color:#fff; font-weight:bold;">${item.fecha}</small>
+                    </div>
+                `, { itemsPerView: 2.2, aspectRatio: '4/5' });
+            });
+
+            // 2. GALLERY: 2.2 items (Portrait Mode for Mobile Images)
+            fetch('gualeguaychu/galeria.json').then(r => r.json()).then(data => {
+                initMultiCarousel('gallery-carousel', 'gallery-nav', data, (item) => `
+                    <img src="${item.src}" alt="Sala" style="filter: brightness(0.85);">
+                `, { itemsPerView: 2.2, aspectRatio: '4/5' });
+            });
+
+            // 3. SORTEOS: Render as TEXT LIST
+            fetch('gualeguaychu/sorteos.json').then(r => r.json()).then(data => {
+                const container = document.getElementById('raffles-list');
+                container.innerHTML = '';
+                if(!data || data.length === 0) { container.innerHTML = '<p>No hay sorteos.</p>'; return; }
+
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'info-card';
+                    card.innerHTML = `
+                        <h4>${item.premio}</h4>
+                        <p>${item.condicion}</p>
+                        <span class="meta">📅 ${item.fecha}</span>
+                    `;
+                    container.appendChild(card);
+                });
+            });
+
+            // 4. PROMOS: Render as COMPACT LIST
+            fetch('gualeguaychu/promos_casino.json').then(r => r.json()).then(data => {
+                const container = document.getElementById('promos-list');
+                container.innerHTML = '';
+                if(!data || data.length === 0) { container.innerHTML = '<p>No hay promociones.</p>'; return; }
+
+                data.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'promo-item';
+                    row.innerHTML = `
+                        <div class="promo-icon">🎁</div>
+                        <div>
+                            <h5 style="color:#fff; font-size:1.1rem; margin-bottom:0.3rem;">${item.titulo}</h5>
+                            <p style="color:#aaa; font-size:0.9rem; margin-bottom:0.2rem;">${item.descripcion}</p>
+                            <small style="color:var(--primary-color)">${item.dias}</small>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            });
+
+            // 5. MENU: 2.5 items
+            fetch('gualeguaychu/promos_bar.json').then(r => r.json()).then(data => {
+                initMultiCarousel('menu-carousel', 'menu-nav', data, (item) => `
+                    <img src="${item.imagen}">
+                    <div class="slide-caption">
+                         <div style="display:flex; justify-content:space-between;">
+                            <span style="font-weight:bold; color:var(--primary-color)">${item.nombre}</span>
+                            <span style="background:var(--primary-color); color:black; padding:0 4px; font-weight:bold; border-radius:4px;">${item.precio}</span>
+                        </div>
+                    </div>
+                `, { itemsPerView: 3, aspectRatio: '4/3' });
+            });
+
+        });
+    </script>
+</body>
+</html>
