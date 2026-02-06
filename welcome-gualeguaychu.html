@@ -469,11 +469,35 @@
                     d.className = i === currentIndex ? 'carousel-dot active' : 'carousel-dot';
                 });
             }
+
+            // Touch Support (Swipe)
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            container.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+
+            container.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, {passive: true});
+
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50) {
+                    // Swiped Left -> Next Slide
+                    scrollToSlide(currentIndex + 1);
+                }
+                if (touchEndX > touchStartX + 50) {
+                    // Swiped Right -> Prev Slide
+                    scrollToSlide(currentIndex - 1);
+                }
+            }
             
             // Auto Play
             setInterval(() => {
                 scrollToSlide(currentIndex + 1);
-            }, 5000 + Math.random() * 2000);
+            }, options.interval || 7000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
