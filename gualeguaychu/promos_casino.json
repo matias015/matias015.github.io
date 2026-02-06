@@ -3,12 +3,12 @@
         "titulo": "Promo Bebidas + Ticket",
         "descripcion": "Te regalamos $3000 en tickets jugables por la compra de gaseosas y cervezas.",
         "dias": "Lunes a Viernes de 10 a 20hs",
-        "imagen": "gualeguaychu/imagenes/image-3.jpeg"
+        "imagen": "gualeguaychu/imagenes/promos/promo_bebidas_ticket.png"
     },
     {
         "titulo": "Beneficios Fan Destacado",
         "descripcion": "Si sos fan destacado en IG o FB: 30% OFF en consumiciones y premios en 'Entra Ganando'.",
         "dias": "Todos los días",
-        "imagen": "gualeguaychu/imagenes/image-1.jpeg"
+        "imagen": "gualeguaychu/imagenes/promos/fan_destacado.png"
     }
 ]

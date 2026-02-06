@@ -331,17 +331,19 @@
                 <!-- Sorteos -->
                 <div>
                     <h3 style="margin-bottom: 1.5rem; color: #fff; font-size: 1.4rem;">🏆 Sorteos Vigentes</h3>
-                    <div id="raffles-list">
-                        <p style="color:#666">Cargando sorteos...</p>
+                    <div id="raffles-carousel" class="carousel-view">
+                        <div class="carousel-track"></div>
                     </div>
+                    <div class="carousel-nav" id="raffles-nav"></div>
                 </div>
 
                 <!-- Promos -->
                 <div>
                     <h3 style="margin-bottom: 1.5rem; color: #fff; font-size: 1.4rem;">⚡ Promociones</h3>
-                    <div id="promos-list" style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 12px;">
-                        <p style="color:#666">Cargando promociones...</p>
+                    <div id="promos-carousel" class="carousel-view">
+                        <div class="carousel-track"></div>
                     </div>
+                    <div class="carousel-nav" id="promos-nav"></div>
                 </div>
 
             </div>
@@ -520,43 +522,37 @@
                 `, { itemsPerView: 2.2, aspectRatio: '4/5' });
             });
 
-            // 3. SORTEOS: Render as TEXT LIST
+            // 3. SORTEOS: Render as CAROUSEL
             fetch('gualeguaychu/sorteos.json').then(r => r.json()).then(data => {
-                const container = document.getElementById('raffles-list');
-                container.innerHTML = '';
-                if(!data || data.length === 0) { container.innerHTML = '<p>No hay sorteos.</p>'; return; }
-
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'info-card';
-                    card.innerHTML = `
-                        <h4>${item.premio}</h4>
-                        <p>${item.condicion}</p>
-                        <span class="meta">📅 ${item.fecha}</span>
-                    `;
-                    container.appendChild(card);
-                });
+                initMultiCarousel('raffles-carousel', 'raffles-nav', data, (item) => `
+                    <div style="background:rgba(255,255,255,0.05); border-radius:12px; height:100%; border:1px solid rgba(255,255,255,0.1); overflow:hidden; display:flex; flex-direction:column;">
+                        <div style="height:220px; overflow:hidden;">
+                            ${item.imagen ? `<img src="${item.imagen}" style="width:100%; height:100%; object-fit:cover;">` : ''}
+                        </div>
+                        <div style="padding:1rem; flex-grow:1; display:flex; flex-direction:column;">
+                            <h4 style="margin:0 0 0.5rem 0; font-size:1.1rem; color:var(--secondary-color)">${item.premio}</h4>
+                            <p style="font-size:0.9rem; color:#ccc; line-height:1.4; margin-bottom:0.5rem; flex-grow:1;">${item.condicion}</p>
+                            <span style="font-size:0.85rem; color:#888; font-weight:bold; text-transform:uppercase;">📅 ${item.fecha}</span>
+                        </div>
+                    </div>
+                `, { itemsPerView: 1 });
             });
 
-            // 4. PROMOS: Render as COMPACT LIST
+            // 4. PROMOS: Render as CAROUSEL
             fetch('gualeguaychu/promos_casino.json').then(r => r.json()).then(data => {
-                const container = document.getElementById('promos-list');
-                container.innerHTML = '';
-                if(!data || data.length === 0) { container.innerHTML = '<p>No hay promociones.</p>'; return; }
-
-                data.forEach(item => {
-                    const row = document.createElement('div');
-                    row.className = 'promo-item';
-                    row.innerHTML = `
-                        <div class="promo-icon">🎁</div>
-                        <div>
-                            <h5 style="color:#fff; font-size:1.1rem; margin-bottom:0.3rem;">${item.titulo}</h5>
-                            <p style="color:#aaa; font-size:0.9rem; margin-bottom:0.2rem;">${item.descripcion}</p>
-                            <small style="color:var(--primary-color)">${item.dias}</small>
+                // Use carousel instead of list
+                 initMultiCarousel('promos-carousel', 'promos-nav', data, (item) => `
+                    <div style="background:rgba(255,255,255,0.05); border-radius:12px; height:100%; border:1px solid rgba(255,255,255,0.1); overflow:hidden; display:flex; flex-direction:column;">
+                        <div style="height:220px; overflow:hidden;">
+                            ${item.imagen ? `<img src="${item.imagen}" style="width:100%; height:100%; object-fit:cover;">` : `<div style="width:100%; height:100%; background:#222; display:flex; align-items:center; justify-content:center; font-size:2rem;">🎁</div>`}
                         </div>
-                    `;
-                    container.appendChild(row);
-                });
+                        <div style="padding:1rem; flex-grow:1; display:flex; flex-direction:column;">
+                            <h4 style="margin:0 0 0.5rem 0; font-size:1.1rem; color:var(--primary-color)">${item.titulo}</h4>
+                            <p style="font-size:0.9rem; color:#ccc; line-height:1.4; margin-bottom:0.5rem; flex-grow:1;">${item.descripcion}</p>
+                            <small style="font-weight:bold; color:#fff;">${item.dias}</small>
+                        </div>
+                    </div>
+                `, { itemsPerView: 1 }); // 1 item per view in this column seems best as it's already narrow
             });
 
             // 5. MENU: 2.5 items

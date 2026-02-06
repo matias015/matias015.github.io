@@ -1,72 +1,163 @@
 [
-    {
-    "categoria": "Principales",
-    "items": [
-        {
-        "nombre": "Pizza Especial",
-        "descripcion": "Mozzarella, jamón crudo, rúcula y parmesano.",
-        "precio": 10500,
-        "imagen":"gualeguaychu/imagenes/bar/pizza-pepperoni.jpg"
-      },
-      {
-        "nombre": "Hamburguesa Gualeguaychú",
-        "descripcion": "Doble medallón de carne, queso azul, rúcula y cebolla caramelizada. Acompañada de papas fritas.",
-        "precio": 9500,
-        "imagen": ""
-      },
-      {
-        "nombre": "Bife de Chorizo (400g)",
-        "descripcion": "Corte de primera calidad asado a la parrilla, con guarnición a elección.",
-        "precio": 14500,
-        "imagen": ""
-      }
-      
-    ]
-  },
   {
-    "categoria": "Entradas",
+    "categoria": "Entradas & Picadas",
     "items": [
       {
-        "nombre": "Papas Fritas Rústicas",
-        "descripcion": "Crujientes papas con piel, servidas con dip de cheddar y panceta.",
-        "precio": 5500,
-        "imagen": "gualeguaychu/imagenes/bar/pizza-pepperoni.jpg"
+        "nombre": "Papas Fritas con Cheddar",
+        "descripcion": "Papas rústicas bañadas en salsa cheddar, panceta crocante y verdeo.",
+        "precio": 6500,
+        "imagen": "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&q=80&w=600"
       },
       {
         "nombre": "Rabas a la Romana",
-        "descripcion": "Anillas de calamar tiernas fritas, acompañadas de limón y salsa tártara.",
-        "precio": 8900,
-        "imagen": ""
+        "descripcion": "Anillas de calamar tiernas rebozadas, con limones asados y salsa tártara.",
+        "precio": 9800,
+        "imagen": "https://images.unsplash.com/photo-1604909052743-94e838986d24?auto=format&fit=crop&q=80&w=600"
       },
       {
         "nombre": "Bastones de Mozzarella",
-        "descripcion": "Bastones empanizados y fritos de queso mozzarella con salsa marinara.",
-        "precio": 6200,
-        "imagen": ""
+        "descripcion": "6 unidades de mozzarella rebozada frita con salsa fileto para dippear.",
+        "precio": 7200,
+        "imagen": "https://images.unsplash.com/photo-1531749668029-2db88e4276c7?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Picada Entrerriana (Para 2)",
+        "descripcion": "Jamón cocido, salame de colonia, queso tybo, aceitunas, maní y pan de campo.",
+        "precio": 12500,
+        "imagen": "https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&q=80&w=600"
       }
     ]
   },
-  
+  {
+    "categoria": "Minutas & Burgers",
+    "items": [
+      {
+        "nombre": "Hamburguesa Gualeguaychú",
+        "descripcion": "Doble medallón de 120g, queso azul, cebolla caramelizada, rúcula y mayo casera.",
+        "precio": 10500,
+        "imagen": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Lomito Completo",
+        "descripcion": "Lomo tierno, lechuga, tomate, jamón, queso y huevo en pan casero. Con fritas.",
+        "precio": 11800,
+        "imagen": "https://images.unsplash.com/photo-1692283995804-0b42c6762391?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Sándwich de Bondiola",
+        "descripcion": "Bondiola braseada desmechada con barbacoa y coleslaw en pan brioche.",
+        "precio": 10200,
+        "imagen": "https://images.unsplash.com/photo-1553909489-cd47e0907980?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Tostado Miga Triple",
+        "descripcion": "Clásico tostado de jamón y queso en pan de miga. Porción de 4 triángulos.",
+        "precio": 5500,
+        "imagen": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=600"
+      }
+    ]
+  },
+  {
+    "categoria": "Pizzas Caseras",
+    "items": [
+      {
+        "nombre": "Pizza Especial",
+        "descripcion": "Salsa de tomate, mozzarella, jamón cocido, morrones y aceitunas.",
+        "precio": 8500,
+        "imagen": "gualeguaychu/imagenes/bar/pizza-pepperoni.jpg"
+      },
+      {
+        "nombre": "Pizza Rúcula y Crudo",
+        "descripcion": "Mozzarella, jamón crudo serrano, rúcula fresca y hebras de parmesano.",
+        "precio": 9500,
+        "imagen": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Fugazzeta Rellena",
+        "descripcion": "Rellena de mozzarella, cubierta con mucha cebolla y provolone gratinado.",
+        "precio": 9200,
+        "imagen": "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&q=80&w=600"
+      }
+    ]
+  },
+  {
+    "categoria": "Principales",
+    "items": [
+      {
+        "nombre": "Ojo de Bife (400g)",
+        "descripcion": "Corte premium a la parrilla con papas rústicas o ensalada mixta.",
+        "precio": 14500,
+        "imagen": "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Milanesa Napolitana",
+        "descripcion": "Milanesa de ternera con salsa, jamón y queso gratinado. Con puré o fritas.",
+        "precio": 11000,
+        "imagen": "https://images.unsplash.com/photo-1599921841143-819065a55cc6?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Sorrentinos Caseros",
+        "descripcion": "Rellenos de jamón y queso con salsa filetto, rosa o crema de verdeo.",
+        "precio": 9800,
+        "imagen": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=600"
+      }
+    ]
+  },
+  {
+    "categoria": "Postres & Cafetería",
+    "items": [
+      {
+        "nombre": "Café Jarrita / Lágrima",
+        "descripcion": "Café tostado natural.",
+        "precio": 2200,
+        "imagen": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Flan Casero",
+        "descripcion": "Con dulce de leche y crema chantilly.",
+        "precio": 4500,
+        "imagen": "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Brownie con Helado",
+        "descripcion": "Brownie tibio de nuez con bocha de helado de americana y charlotte.",
+        "precio": 5200,
+        "imagen": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&q=80&w=600"
+      }
+    ]
+  },
   {
     "categoria": "Bebidas",
     "items": [
       {
-        "nombre": "Cerveza Artesanal Pinta",
-        "descripcion": "Selección de estilos IPA, Honey, Golden o Stout.",
-        "precio": 3500,
-        "imagen": ""
+        "nombre": "Cerveza Tirada (Pinta)",
+        "descripcion": "Honey, IPA, Golden o Scottish.",
+        "precio": 3800,
+        "imagen": "https://images.unsplash.com/photo-1535958636474-b021ee8874a3?auto=format&fit=crop&q=80&w=600"
       },
       {
         "nombre": "Fernet con Cola",
-        "descripcion": "Clásico argentino preparado con Fernet Branca y Coca-Cola.",
-        "precio": 4500,
-        "imagen": ""
+        "descripcion": "El clásico.",
+        "precio": 4800,
+        "imagen": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600"
       },
       {
-        "nombre": "Limonada con Menta y Jengibre",
-        "descripcion": "Refrescante limonada casera frozen.",
-        "precio": 2800,
-        "imagen": ""
+        "nombre": "Gaseosa Línea Coca-Cola",
+        "descripcion": "500ml.",
+        "precio": 2200,
+        "imagen": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Agua Mineral",
+        "descripcion": "Con o sin gas.",
+        "precio": 1800,
+        "imagen": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        "nombre": "Gin Tonic",
+        "descripcion": "Beefeater, tónica y pepino o limón.",
+        "precio": 5500,
+        "imagen": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80&w=600"
       }
     ]
   }
