@@ -1,14 +1,14 @@
 [
     {
-        "premio": "Moto 0km",
-        "fecha": "28 de Febrero - 23:00hs",
-        "condicion": "Sumá chances jugando con tu tarjeta.",
-        "imagen": "gualeguaychu/imagenes/image-3.jpeg"
+        "premio": "Sorteos por Créditos",
+        "fecha": "Miércoles de 19:00 a 21:00hs",
+        "condicion": "Sorteos por premios hasta 50.000 pesos. Registrá tu DNI en el tótem y depositá el cupón.",
+        "imagen": "gualeguaychu/imagenes/image-2.jpeg"
     },
     {
-        "premio": "$1.000.000 en Efectivo",
-        "fecha": "Todos los domingos",
-        "condicion": "Sorteos presenciales cada hora.",
+        "premio": "Entra Ganando",
+        "fecha": "Todos los días, cada 8hs",
+        "condicion": "¡Ganar hasta $30.000 para Jugar Gratis!",
         "imagen": "gualeguaychu/imagenes/image-4.jpeg"
     }
 ]

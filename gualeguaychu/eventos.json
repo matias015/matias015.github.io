@@ -1,5 +1,11 @@
 [
     {
+        "artista": "GRUPO CAZADORES",
+        "fecha": "8 DE FEBRERO - 22:00hs",
+        "lugar": "Escenario Principal",
+        "imagen": "gualeguaychu/imagenes/shows/GRUPO_CAZADORES.jpg"
+    },
+    {
         "artista": "MIGUEL PEREYRA Y LOS REBELDES",
         "fecha": "5 DE FEBRERO - 22:00hs",
         "lugar": "Escenario Principal",
@@ -10,11 +16,5 @@
         "fecha": "1 DE FEBRERO - 22:00hs",
         "lugar": "Bar Euforia",
         "imagen": "gualeguaychu/imagenes/shows/GABRIEL_CHANDARE.jpg"
-    },
-    {
-        "artista": "LATIN SHOW",
-        "fecha": "29 DE ENERO - 22:00hs",
-        "lugar": "Bar Euforia",
-        "imagen": "gualeguaychu/imagenes/shows/LATIN_SHOW.jpg"
     }
 ]

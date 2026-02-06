@@ -1,0 +1,73 @@
+[
+    {
+    "categoria": "Principales",
+    "items": [
+        {
+        "nombre": "Pizza Especial",
+        "descripcion": "Mozzarella, jamón crudo, rúcula y parmesano.",
+        "precio": 10500,
+        "imagen":"gualeguaychu/imagenes/bar/pizza-pepperoni.jpg"
+      },
+      {
+        "nombre": "Hamburguesa Gualeguaychú",
+        "descripcion": "Doble medallón de carne, queso azul, rúcula y cebolla caramelizada. Acompañada de papas fritas.",
+        "precio": 9500,
+        "imagen": ""
+      },
+      {
+        "nombre": "Bife de Chorizo (400g)",
+        "descripcion": "Corte de primera calidad asado a la parrilla, con guarnición a elección.",
+        "precio": 14500,
+        "imagen": ""
+      }
+      
+    ]
+  },
+  {
+    "categoria": "Entradas",
+    "items": [
+      {
+        "nombre": "Papas Fritas Rústicas",
+        "descripcion": "Crujientes papas con piel, servidas con dip de cheddar y panceta.",
+        "precio": 5500,
+        "imagen": "gualeguaychu/imagenes/bar/pizza-pepperoni.jpg"
+      },
+      {
+        "nombre": "Rabas a la Romana",
+        "descripcion": "Anillas de calamar tiernas fritas, acompañadas de limón y salsa tártara.",
+        "precio": 8900,
+        "imagen": ""
+      },
+      {
+        "nombre": "Bastones de Mozzarella",
+        "descripcion": "Bastones empanizados y fritos de queso mozzarella con salsa marinara.",
+        "precio": 6200,
+        "imagen": ""
+      }
+    ]
+  },
+  
+  {
+    "categoria": "Bebidas",
+    "items": [
+      {
+        "nombre": "Cerveza Artesanal Pinta",
+        "descripcion": "Selección de estilos IPA, Honey, Golden o Stout.",
+        "precio": 3500,
+        "imagen": ""
+      },
+      {
+        "nombre": "Fernet con Cola",
+        "descripcion": "Clásico argentino preparado con Fernet Branca y Coca-Cola.",
+        "precio": 4500,
+        "imagen": ""
+      },
+      {
+        "nombre": "Limonada con Menta y Jengibre",
+        "descripcion": "Refrescante limonada casera frozen.",
+        "precio": 2800,
+        "imagen": ""
+      }
+    ]
+  }
+]

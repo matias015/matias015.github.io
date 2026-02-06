@@ -1,6 +1,0 @@
-Usar carrusel de imagenes en vez de las imagenes estaticas tipo card.
-
-3 areas que sean por ejemplo shows, informacion, y restaurant.
-
-https://www.instagram.com/casinogualeguaychu/?__d=1utm_sourceig_embed
-https://www.facebook.com/CasinoGualeguaychu

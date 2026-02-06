@@ -1,17 +1,17 @@
 :root {
   --bg-color: #050505;
   --text-color: #e0e0e0;
-  --primary-color: #bd1f2d; /* Logo Red */
-  --primary-hover: #a11a26;
+  --primary-color: #169ad6; /* Blue Brand */
+  --primary-hover: #117aab;
   --secondary-color: #1a92a9; /* Brand Teal */
-  --brand-dark: #105671; /* Brand Dark Blue */
+  --brand-dark: #105671; 
   --card-bg: #121212;
   --card-hover: #1a1a1a;
   --nav-bg: rgba(5, 5, 5, 0.9);
   --font-main: 'Outfit', sans-serif;
   --spacing-section: 4rem;
   --radius-md: 12px;
-  --shadow-gold: 0 4px 20px rgba(189, 31, 45, 0.2);
+  --shadow-gold: 0 4px 20px rgba(22, 154, 214, 0.2);
 }
 
 * {

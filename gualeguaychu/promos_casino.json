@@ -1,14 +1,14 @@
 [
     {
-        "titulo": "Sorteo de Bienvenida",
-        "descripcion": "¡Ganá hasta $500.000 en premios instantáneos!",
-        "dias": "Todos los días",
-        "imagen": "gualeguaychu/imagenes/image-1.jpeg"
+        "titulo": "Promo Bebidas + Ticket",
+        "descripcion": "Te regalamos $3000 en tickets jugables por la compra de gaseosas y cervezas.",
+        "dias": "Lunes a Viernes de 10 a 20hs",
+        "imagen": "gualeguaychu/imagenes/image-3.jpeg"
     },
     {
-        "titulo": "Triple Chance",
-        "descripcion": "Multiplica tus chances jugando en nuestras máquinas seleccionadas.",
-        "dias": "Martes y Jueves",
-        "imagen": "gualeguaychu/imagenes/image-2.jpeg"
+        "titulo": "Beneficios Fan Destacado",
+        "descripcion": "Si sos fan destacado en IG o FB: 30% OFF en consumiciones y premios en 'Entra Ganando'.",
+        "dias": "Todos los días",
+        "imagen": "gualeguaychu/imagenes/image-1.jpeg"
     }
 ]

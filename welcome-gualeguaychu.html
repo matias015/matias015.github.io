@@ -9,10 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Theme Overrides for Welcome Page - Blue Brand */
+        :root {
+            --primary-color: #169ad6; /* Blue */
+            --primary-hover: #117aab;
+            --shadow-gold: 0 4px 20px rgba(22, 154, 214, 0.2);
+        }
+
         .welcome-hero {
             height: 60vh;
             min-height: 400px;
-            background-image: url('https://casinoji.si/wp-content/uploads/2024/05/slide-1-1536x1022.jpg');
+            /* Background set via JS from info.json */
             background-size: cover;
             background-position: center;
             position: relative;
@@ -257,6 +264,8 @@
 <body>
 
     <header class="welcome-hero">
+        <img id="header-logo" alt="Logo" style="position: absolute; top: 1.5rem; left: 50%; transform: translateX(-50%); width: 100px; height: auto; z-index: 5;">
+        
         <div class="container welcome-content">
             <span style="color: var(--primary-color); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; font-size: 0.9rem;">Estás conectado en</span>
             <h1 style="margin-bottom: 0; font-size: 2.5rem; line-height: 1.1;">Casino Gualeguaychú</h1>
@@ -350,7 +359,7 @@
             <div class="carousel-nav" id="menu-nav"></div>
             
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="bar-grand.html" class="btn btn-secondary">VER CARTA COMPLETA</a>
+                <a href="menu-gualeguaychu.html" class="btn btn-secondary">VER CARTA COMPLETA</a>
             </div>
         </div>
     </section>
@@ -371,6 +380,16 @@
             document.getElementById('info-hours').textContent = data.horarios;
             document.getElementById('info-machines').textContent = data.cantidad_maquinas;
             document.getElementById('info-roulettes').textContent = data.cantidad_ruletas;
+
+            // Set Logo from Config
+            if(data.logo) {
+                document.getElementById('header-logo').src = data.logo;
+            }
+
+            // Set Hero Image
+            if(data.hero_imagen) {
+                document.querySelector('.welcome-hero').style.backgroundImage = `url('${data.hero_imagen}')`;
+            }
 
             // WhatsApp Reservation Link
             const reserveBtn = document.getElementById('show-reservation-link');
