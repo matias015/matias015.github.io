@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOL — Dashboard de Slots</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#0b0d12; --surf:#111318; --card:#161b24; --card2:#1c2230;
+  --b1:rgba(255,255,255,0.07); --b2:rgba(255,255,255,0.13);
+  --txt:#dde1ea; --muted:#636878; --dim:#3a3f4d;
+  --acc:#4f8ef7; --grn:#2dd4bf; --amb:#f59e0b; --red:#f43f5e; --pur:#a78bfa;
+  --font:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+  --r:8px; --r2:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surf);border-bottom:1px solid var(--b1);position:sticky;top:0;z-index:200;gap:12px;flex-wrap:wrap}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.logo{width:32px;height:32px;background:var(--acc);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#fff;flex-shrink:0}
+.hdr h1{font-size:15px;font-weight:500}
+.hdr-meta{font-size:11px;color:var(--muted)}
+.search-wrap{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.search-input{background:var(--card);border:1px solid var(--b2);border-radius:var(--r);padding:7px 12px;color:var(--txt);font-family:var(--mono);font-size:12px;width:160px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--acc)}
+.search-input::placeholder{color:var(--muted)}
+.search-btn{background:var(--acc);border:none;border-radius:var(--r);padding:7px 14px;color:#fff;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.search-btn:hover{background:#6ba0f9}
+
+/* NAV TABS */
+.nav-wrap{background:var(--surf);border-bottom:1px solid var(--b1);padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-tabs{display:flex;gap:0;min-width:max-content}
+.nav-tab{padding:11px 16px;font-size:12px;font-weight:500;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-tab:hover{color:var(--txt)}
+.nav-tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* LAYOUT */
+main{padding:20px;max-width:1440px;margin:0 auto}
+.section-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.section-lbl:first-child{margin-top:0}
+
+/* LOADING / ERROR */
+#loading{display:flex;align-items:center;justify-content:center;min-height:50vh;flex-direction:column;gap:14px;color:var(--muted)}
+.spinner{width:26px;height:26px;border:2px solid var(--b2);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err-box{display:none;padding:16px 20px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);border-radius:var(--r);color:#fb7185;font-size:13px;margin-bottom:16px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi{background:var(--card);border:1px solid var(--b1);border-radius:var(--r2);padding:16px 18px;transition:border-color .2s}
+.kpi:hover{border-color:var(--b2)}
+.kpi-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
+.kpi-val{font-size:24px;font-weight:300;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.kpi-val.acc{color:var(--acc)} .kpi-val.grn{color:var(--grn)} .kpi-val.amb{color:var(--amb)} .kpi-val.red{color:var(--red)} .kpi-val.pur{color:var(--pur)}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:5px;font-family:var(--mono)}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g31{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.g13{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r2);padding:18px 20px}
+.card-t{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px}
+.chart-w{position:relative;width:100%}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:6px 10px 8px;border-bottom:1px solid var(--b1);white-space:nowrap;cursor:pointer;user-select:none}
+thead th.r{text-align:right}
+thead th:hover{color:var(--txt)}
+thead th.sort-asc::after{content:' ↑';color:var(--acc)}
+thead th.sort-desc::after{content:' ↓';color:var(--acc)}
+tbody td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+tbody td.r{text-align:right;font-family:var(--mono);font-size:11px}
+tbody tr:hover td{background:rgba(255,255,255,.02)}
+tbody tr:last-child td{border-bottom:none}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;white-space:nowrap}
+.b-A{background:rgba(79,142,247,.15);color:#7ab3ff}
+.b-B{background:rgba(45,212,191,.15);color:#5eead4}
+.b-C{background:rgba(245,158,11,.15);color:#fbbf24}
+.b-D{background:rgba(244,63,94,.15);color:#fb7185}
+.b-R{background:rgba(167,139,250,.15);color:#c4b5fd}
+.b-top{background:rgba(45,212,191,.15);color:#5eead4}
+.b-bot{background:rgba(244,63,94,.15);color:#fb7185}
+
+/* BAR INLINE */
+.bar-cell{display:flex;align-items:center;gap:6px}
+.bar-tr{flex:0 0 60px;height:3px;background:rgba(255,255,255,.07);border-radius:2px}
+.bar-f{height:3px;border-radius:2px;background:var(--acc)}
+.bar-f.grn{background:var(--grn)} .bar-f.red{background:var(--red)}
+
+/* INDEX PILL */
+.idx-pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px}
+.idx-up{background:rgba(45,212,191,.1);color:#5eead4}
+.idx-mid{background:rgba(255,255,255,.06);color:var(--muted)}
+.idx-dn{background:rgba(244,63,94,.1);color:#fb7185}
+
+/* MACHINE DETAIL */
+#maq-detail{display:none}
+.maq-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.maq-uid{font-size:36px;font-weight:300;color:var(--acc);font-family:var(--mono);line-height:1}
+.maq-info{flex:1}
+.maq-title{font-size:16px;font-weight:500;margin-bottom:4px}
+.maq-meta{font-size:12px;color:var(--muted)}
+.back-btn{background:none;border:1px solid var(--b2);border-radius:var(--r);padding:6px 14px;color:var(--muted);font-size:12px;cursor:pointer;margin-bottom:16px}
+.back-btn:hover{color:var(--txt);border-color:var(--b2)}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.detail-field{background:var(--card2);border-radius:var(--r);padding:10px 14px}
+.df-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.df-val{font-size:14px;font-weight:500;font-family:var(--mono)}
+.rank-info{background:var(--card2);border-radius:var(--r);padding:14px 18px;margin-top:16px}
+.rank-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1)}
+.rank-row:last-child{border-bottom:none}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* PAGE VISIBILITY */
+.page{display:none}
+.page.active{display:block}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3,.g31,.g13{grid-template-columns:1fr}
+  main{padding:12px}
+  .hdr{padding:10px 12px}
+  .search-input{width:110px}
+  .detail-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .kpi-val{font-size:20px}
+  .detail-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="logo">T</div>
+    <div>
+      <h1>Dashboard de Slots</h1>
+      <div class="hdr-meta" id="hdr-meta">Cargando…</div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <input class="search-input" type="text" id="search-uid" placeholder="N° máquina…" maxlength="10">
+    <button class="search-btn" onclick="buscarMaquina()">Buscar</button>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-wrap">
+  <div class="nav-tabs" id="nav-tabs">
+    <button class="nav-tab active" data-page="overview" onclick="setPage('overview',this)">Todas las salas</button>
+  </div>
+</nav>
+
+<main>
+  <div id="loading"><div class="spinner"></div><span>Cargando datos…</span></div>
+  <div class="err-box" id="err-box"></div>
+
+  <!-- MACHINE DETAIL -->
+  <div id="maq-detail">
+    <button class="back-btn" onclick="closeMaq()">← Volver al dashboard</button>
+    <div class="maq-header">
+      <div class="maq-uid" id="d-uid">—</div>
+      <div class="maq-info">
+        <div class="maq-title" id="d-juego">—</div>
+        <div class="maq-meta" id="d-meta">—</div>
+      </div>
+    </div>
+    <div class="detail-grid" id="d-fields"></div>
+    <div class="rank-info" id="d-rank"></div>
+  </div>
+
+  <!-- PAGES CONTAINER -->
+  <div id="pages"></div>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   CONFIG — cambiá DATA_SOURCE a tu API en producción
+   ═══════════════════════════════════════════════════ */
+const DATA_SOURCE = './slots_data.json';
+const FETCH_HEADERS = {};
+const INLINE_DATA = {"meta":{"mes":"14-FEBRERO","periodo":"Febrero 2025","total_maquinas":1062,"total_salas":11},"salas":[{"sala":"GUALEGUAYCHU","maquinas":207,"coin_in":219228624,"win":13729480,"payback_pct":92.9879,"retencion_pct":7.0121,"ci_por_maq":1059075,"ap_prom":303.73},{"sala":"COLON","maquinas":158,"coin_in":184584505,"win":12820405,"payback_pct":92.3221,"retencion_pct":7.6779,"ci_por_maq":1168256,"ap_prom":243.32},{"sala":"GUALEGUAY","maquinas":115,"coin_in":98780813,"win":7017643,"payback_pct":92.8841,"retencion_pct":7.1159,"ci_por_maq":858964,"ap_prom":227.78},{"sala":"VILLAGUAY","maquinas":94,"coin_in":55174143,"win":3257924,"payback_pct":92.7903,"retencion_pct":7.2097,"ci_por_maq":586959,"ap_prom":237.48},{"sala":"NOGOYA","maquinas":92,"coin_in":49282946,"win":3435809,"payback_pct":92.5458,"retencion_pct":7.4542,"ci_por_maq":535684,"ap_prom":303.37},{"sala":"GUALEGUAYCHU ANEXO","maquinas":83,"coin_in":41818512,"win":2826326,"payback_pct":92.7711,"retencion_pct":7.2289,"ci_por_maq":503837,"ap_prom":307.53},{"sala":"TALA","maquinas":72,"coin_in":33116941,"win":2083595,"payback_pct":92.5284,"retencion_pct":7.4716,"ci_por_maq":459958,"ap_prom":263.96},{"sala":"SANTA ELENA","maquinas":54,"coin_in":20961836,"win":1125103,"payback_pct":93.0747,"retencion_pct":6.9253,"ci_por_maq":388182,"ap_prom":429.24},{"sala":"VILLA ELISA","maquinas":62,"coin_in":17080421,"win":1001566,"payback_pct":92.8002,"retencion_pct":7.1998,"ci_por_maq":275491,"ap_prom":329.53},{"sala":"LA PAZ ANEXO","maquinas":82,"coin_in":12430811,"win":694442,"payback_pct":93.2828,"retencion_pct":6.7172,"ci_por_maq":151595,"ap_prom":294.78},{"sala":"SAN SALVADOR","maquinas":34,"coin_in":3902155,"win":199688,"payback_pct":92.8803,"retencion_pct":7.1197,"ci_por_maq":114769,"ap_prom":725.35}],"marcas":{"ZITRO":252,"WMS":207,"IGT":266,"BALLY":86,"ARISTOCRAT":61,"KONAMI":52,"EVERI":49,"AYEX":25,"EGT":18,"MAGIC DREAMS":13,"NOVOMATIC":11,"ATRONIC":8,"SCIENTIFIC GAMES":5,"SPIELLO":5,"BELATRA":2,"IGT REFABRIC":2},"top_juegos":[{"juego":"ASIAN WOODS/CASINO MIX/GODS LAND/LADY …","coin_in":46384853},{"juego":"SWEET TROPICAL FRUITS / TOTEM SPIRITS …","coin_in":39292394},{"juego":"TRIPLE CHARM AMETHYST/TRIPLE CHARM EME…","coin_in":38947104},{"juego":"MAKEDA / SEA WOLF","coin_in":30670192},{"juego":"AVALON LEGENDARY SWORD/ ELYSIUM LEGEND…","coin_in":28898857},{"juego":"SUMMER / AUTUMN / WINTER / SPRING","coin_in":23267156},{"juego":"88 FORTUNES","coin_in":21065405},{"juego":"MEGA KING / BRAVE BUFFALO / DRAGON PRI…","coin_in":20356431},{"juego":"AVALON/ ELYSIUM","coin_in":20036279},{"juego":"SPIN ROULETTE","coin_in":18918577}],"clases_por_sala":{"GUALEGUAYCHU":{"CLASE A":80,"CLASE B":42,"CLASE C":41,"CLASE D":47,"RULETA":5},"COLON":{"CLASE A":76,"CLASE B":18,"CLASE C":31,"CLASE D":31,"RULETA":2},"GUALEGUAY":{"CLASE A":42,"CLASE B":11,"CLASE C":30,"CLASE D":30,"RULETA":2},"VILLAGUAY":{"CLASE A":27,"CLASE B":16,"CLASE C":26,"CLASE D":23,"RULETA":2},"NOGOYA":{"CLASE A":18,"CLASE B":6,"CLASE C":32,"CLASE D":34,"RULETA":3},"GUALEGUAYCHU ANEXO":{"CLASE A":12,"CLASE B":17,"CLASE C":35,"CLASE D":14,"RULETA":5},"TALA":{"CLASE A":8,"CLASE B":19,"CLASE C":17,"CLASE D":26,"RULETA":2},"SANTA ELENA":{"CLASE A":3,"CLASE B":7,"CLASE C":8,"CLASE D":34,"RULETA":2},"VILLA ELISA":{"CLASE A":9,"CLASE B":7,"CLASE C":11,"CLASE D":32,"RULETA":3},"LA PAZ ANEXO":{"CLASE A":3,"CLASE B":20,"CLASE C":21,"CLASE D":34,"RULETA":4},"SAN SALVADOR":{"CLASE A":0,"CLASE B":0,"CLASE C":7,"CLASE D":24,"RULETA":3}}};
+
+/* ─── PALETTES ───────────────────────────────────── */
+const PAL = ['#4f8ef7','#2dd4bf','#f59e0b','#f43f5e','#a78bfa','#fb923c','#38bdf8','#4ade80','#facc15','#f472b6','#94a3b8','#60a5fa','#34d399'];
+const PALΑ = PAL.map(c=>c+'99');
+const CLASE_C = {'CLASE A':'#4f8ef7','CLASE B':'#2dd4bf','CLASE C':'#f59e0b','CLASE D':'#f43f5e','RULETA':'#a78bfa'};
+const CLASE_CL = {'CLASE A':'b-A','CLASE B':'b-B','CLASE C':'b-C','CLASE D':'b-D','RULETA':'b-R'};
+
+/* ─── FORMATTERS ────────────────────────────────── */
+const fmtM  = v => '$'+(v/1e6).toFixed(2)+'M';
+const fmtK  = v => '$'+Math.round(v/1e3).toLocaleString('es-AR')+'K';
+const fmtN  = v => Math.round(v).toLocaleString('es-AR');
+const fmtPct= v => (v*100).toFixed(1)+'%';
+const fmtPB = v => (v*100).toFixed(2)+'%';
+const fmtIdx= v => v.toFixed(2)+'x';
+const idxClass=v=>v>=1.5?'idx-up':v>=0.75?'idx-mid':'idx-dn';
+
+/* ─── CHART DEFAULTS ────────────────────────────── */
+const TT={backgroundColor:'#1a2035',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleFont:{size:11,family:"'IBM Plex Sans'"},bodyFont:{size:11,family:"'IBM Plex Sans'"},padding:10,cornerRadius:8};
+const SC={ticks:{color:'#636878',font:{size:10,family:"'IBM Plex Sans'"}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'}};
+const chartInst={};
+function mkChart(id,cfg){if(chartInst[id])chartInst[id].destroy();const c=new Chart(document.getElementById(id),cfg);chartInst[id]=c;return c;}
+
+/* ─── GLOBALS ───────────────────────────────────── */
+let DATA=null;
+let machineMap={};
+
+/* ─── LOAD DATA ─────────────────────────────────── */
+async function loadData(){
+  try{const r=await fetch(DATA_SOURCE,{headers:FETCH_HEADERS});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}
+  catch(e){console.warn('Fallback a datos inline',e);return INLINE_DATA;}
+}
+
+/* ─── PAGE MANAGEMENT ───────────────────────────── */
+let currentPage='overview';
+function setPage(id,el){
+  currentPage=id;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('maq-detail').style.display='none';
+  document.getElementById('pages').style.display='';
+}
+
+/* ─── SEARCH MACHINE ───────────────────────────── */
+function buscarMaquina(){
+  const v=document.getElementById('search-uid').value.trim();
+  if(!v)return;
+  const uid=parseInt(v);
+  if(!machineMap[uid]){alert('Máquina #'+uid+' no encontrada.');return;}
+  showMaquina(uid);
+}
+document.getElementById('search-uid').addEventListener('keydown',e=>{if(e.key==='Enter')buscarMaquina();});
+
+function showMaquina(uid){
+  const m=machineMap[uid];
+  if(!m)return;
+  document.getElementById('maq-detail').style.display='block';
+  document.getElementById('pages').style.display='none';
+  // Header
+  document.getElementById('d-uid').textContent='#'+m.uid;
+  document.getElementById('d-juego').textContent=m.juego||'(sin juego)';
+  document.getElementById('d-meta').textContent=m.sala+' · '+m.marca+' '+m.modelo+' · '+m.clase;
+  // KPI fields
+  const sala=DATA.by_sala.find(s=>s.key===m.sala);
+  const salaAvgCI=sala?sala.avg_ci:DATA.meta.global_avg_ci;
+  const ciIdxSala=m.coin_in/salaAvgCI;
+  const ciIdxGlobal=m.coin_in/DATA.meta.global_avg_ci;
+  // rank in sala
+  const salaMachs=[...DATA.machines.filter(x=>x.sala===m.sala)].sort((a,b)=>b.coin_in-a.coin_in);
+  const rankSala=salaMachs.findIndex(x=>x.uid===uid)+1;
+  const allMachs=[...DATA.machines].sort((a,b)=>b.coin_in-a.coin_in);
+  const rankGlobal=allMachs.findIndex(x=>x.uid===uid)+1;
+  const isTop15S=DATA.top15_sala[m.sala]?.includes(uid);
+  const isBot15S=DATA.bot15_sala[m.sala]?.includes(uid);
+  const isTop15G=DATA.top15_global.includes(uid);
+  const isBot15G=DATA.bot15_global.includes(uid);
+  const fields=[
+    {l:'Coin-in',v:fmtK(m.coin_in),cls:'acc'},
+    {l:'Win',v:fmtK(m.win),cls:'grn'},
+    {l:'Payback',v:fmtPB(m.payback),cls:'amb'},
+    {l:'Apuesta promedio',v:'$'+m.ap_prom.toLocaleString('es-AR'),cls:''},
+    {l:'Días operativa',v:m.dias+' días',cls:''},
+    {l:'Sector',v:m.sector||'—',cls:''},
+    {l:'Marca / Modelo',v:m.marca+' '+m.modelo,cls:''},
+    {l:'Clase',v:m.clase,cls:''},
+    {l:'Tipo / Display',v:m.tipo_maq+' · '+m.display,cls:''},
+    {l:'Año fabricación',v:m.fecha_fab||'—',cls:''},
+    {l:'Fecha instalación',v:m.fecha_inst||'—',cls:''},
+    {l:'CI índice vs sala',v:fmtIdx(ciIdxSala),cls:ciIdxSala>=1?'grn':'red'},
+    {l:'CI índice vs global',v:fmtIdx(ciIdxGlobal),cls:ciIdxGlobal>=1?'grn':'red'},
+  ];
+  const fg=document.getElementById('d-fields');
+  fg.innerHTML=fields.map(f=>`<div class="detail-field"><div class="df-lbl">${f.l}</div><div class="df-val" style="color:${f.cls==='acc'?'var(--acc)':f.cls==='grn'?'var(--grn)':f.cls==='amb'?'var(--amb)':f.cls==='red'?'var(--red)':'var(--txt)'}">${f.v}</div></div>`).join('');
+  // Rank
+  const perfs=[];
+  if(isTop15G)perfs.push('<span class="badge b-top">Top 15% global</span>');
+  if(isBot15G)perfs.push('<span class="badge b-bot">Peor 15% global</span>');
+  if(isTop15S)perfs.push('<span class="badge b-top">Top 15% sala</span>');
+  if(isBot15S)perfs.push('<span class="badge b-bot">Peor 15% sala</span>');
+  const rk=document.getElementById('d-rank');
+  rk.innerHTML=`
+    <div class="card-t" style="margin-bottom:12px">Posición y performance</div>
+    <div class="rank-row"><span style="color:var(--muted);font-size:12px">Ranking en sala (${m.sala})</span><span style="font-family:var(--mono);font-size:13px">#${rankSala} de ${salaMachs.length}</span></div>
+    <div class="rank-row"><span style="color:var(--muted);font-size:12px">Ranking global</span><span style="font-family:var(--mono);font-size:13px">#${rankGlobal} de ${DATA.machines.length}</span></div>
+    <div class="rank-row"><span style="color:var(--muted);font-size:12px">Categoría</span><span>${perfs.join(' ')||'<span style="color:var(--muted);font-size:12px">Rango medio</span>'}</span></div>
+    <div class="rank-row"><span style="color:var(--muted);font-size:12px">CI vs promedio sala</span><span class="idx-pill ${idxClass(ciIdxSala)}">${fmtIdx(ciIdxSala)}</span></div>
+    <div class="rank-row"><span style="color:var(--muted);font-size:12px">CI vs promedio global</span><span class="idx-pill ${idxClass(ciIdxGlobal)}">${fmtIdx(ciIdxGlobal)}</span></div>
+  `;
+}
+function closeMaq(){
+  document.getElementById('maq-detail').style.display='none';
+  document.getElementById('pages').style.display='';
+}
+
+/* ═══════════════════════════════════════════════════
+   TABLE BUILDER (sortable)
+   ═══════════════════════════════════════════════════ */
+function buildTable(tbodyId,rows,cols,sortState){
+  const tbody=document.getElementById(tbodyId);
+  if(!tbody)return;
+  tbody.innerHTML=rows.map(r=>`<tr>${cols.map(c=>{
+    let val=r[c.k];
+    let display=val===undefined||val===null?'—':val;
+    if(c.fmt)display=c.fmt(val);
+    let extra=c.extra?c.extra(r):'';
+    return`<td class="${c.r?'r':''}">${display}${extra}</td>`;
+  }).join('')}</tr>`).join('');
+}
+
+function sortableTable(thead,tbody,cols,getRows){
+  let sortK=null,sortDir=1;
+  thead.querySelectorAll('th').forEach((th,i)=>{
+    if(!cols[i].sortable)return;
+    th.addEventListener('click',()=>{
+      if(sortK===cols[i].k)sortDir*=-1;
+      else{sortK=cols[i].k;sortDir=-1;}
+      thead.querySelectorAll('th').forEach(t=>{t.classList.remove('sort-asc','sort-desc');});
+      th.classList.add(sortDir===1?'sort-asc':'sort-desc');
+      const rows=[...getRows()].sort((a,b)=>{
+        const av=a[cols[i].k]??0,bv=b[cols[i].k]??0;
+        return typeof av==='string'?av.localeCompare(bv)*sortDir:(av-bv)*sortDir;
+      });
+      buildTable(tbody.id,rows,cols);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   OVERVIEW PAGE
+   ═══════════════════════════════════════════════════ */
+function buildOverview(D){
+  const pg=document.getElementById('page-overview');
+  const totalCI=D.meta.total_ci;
+  const totalMaq=D.meta.total_maquinas;
+  const avgCI=D.meta.global_avg_ci;
+  const avgWin=D.machines.reduce((a,m)=>a+m.win,0)/totalMaq;
+  const avgPB=D.machines.reduce((a,m)=>a+m.payback,0)/totalMaq;
+  const avgAP=D.machines.reduce((a,m)=>a+m.ap_prom,0)/totalMaq;
+
+  pg.innerHTML=`
+<!-- KPIs -->
+<div class="section-lbl">Indicadores globales</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-lbl">Coin-in promedio / máq.</div><div class="kpi-val acc">${fmtK(avgCI)}</div><div class="kpi-sub">total ${fmtM(totalCI)}</div></div>
+  <div class="kpi"><div class="kpi-lbl">Win promedio / máq.</div><div class="kpi-val grn">${fmtK(avgWin)}</div><div class="kpi-sub">${totalMaq} máquinas activas</div></div>
+  <div class="kpi"><div class="kpi-lbl">Payback promedio</div><div class="kpi-val amb">${fmtPB(avgPB)}</div><div class="kpi-sub">retención ${((1-avgPB)*100).toFixed(2)}%</div></div>
+  <div class="kpi"><div class="kpi-lbl">Apuesta promedio</div><div class="kpi-val pur">$${Math.round(avgAP)}</div><div class="kpi-sub">por máquina</div></div>
+  <div class="kpi"><div class="kpi-lbl">Máquinas activas</div><div class="kpi-val">${fmtN(totalMaq)}</div><div class="kpi-sub">${D.meta.total_salas} salas</div></div>
+</div>
+
+<!-- POR SALA -->
+<div class="section-lbl">Por sala</div>
+<div class="g31">
+  <div class="card">
+    <div class="card-t">Coin-in promedio por máquina y share de mercado</div>
+    <div class="chart-w" style="height:260px"><canvas id="ov-sala-bar"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Share de coin-in</div>
+    <div class="legend" id="ov-pie-leg"></div>
+    <div class="chart-w" style="height:210px"><canvas id="ov-sala-pie"></canvas></div>
+  </div>
+</div>
+
+<!-- RANKING SALA TABLE -->
+<div class="card" style="margin-top:16px">
+  <div class="card-t">Ranking por sala</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead id="ov-sala-thead"><tr>
+        <th>Sala</th><th class="r">Máqs</th><th class="r">Avg CI</th><th class="r">Avg WIN</th><th class="r">Payback</th><th class="r">Ap. Prom</th><th class="r">Share CI</th><th class="r">Share Máqs</th><th class="r">CI Índice</th>
+      </tr></thead>
+      <tbody id="ov-sala-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- POR CLASE -->
+<div class="section-lbl">Por clase y marca</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Avg coin-in por clase</div>
+    <div class="chart-w" style="height:220px"><canvas id="ov-clase-bar"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Avg coin-in por marca (top 8)</div>
+    <div class="chart-w" style="height:220px"><canvas id="ov-marca-bar"></canvas></div>
+  </div>
+</div>
+
+<div class="g2" style="margin-top:16px">
+  <div class="card">
+    <div class="card-t">Ranking por clase</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Clase</th><th class="r">Máqs</th><th class="r">Avg CI</th><th class="r">Payback</th><th class="r">Share CI</th><th class="r">Share Máqs</th><th class="r">CI Índice</th></tr></thead>
+        <tbody id="ov-clase-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-t">Ranking por marca</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Marca</th><th class="r">Máqs</th><th class="r">Avg CI</th><th class="r">Payback</th><th class="r">Share CI</th><th class="r">Share Máqs</th><th class="r">CI Índice</th></tr></thead>
+        <tbody id="ov-marca-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RANKING SALA × CLASE -->
+<div class="section-lbl">Ranking Sala × Clase</div>
+<div class="card">
+  <div class="card-t">Avg coin-in por sala y clase (índice vs global)</div>
+  <div class="chart-w" style="height:280px"><canvas id="ov-sala-clase-chart"></canvas></div>
+</div>
+<div class="card" style="margin-top:16px">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Sala</th><th>Clase</th><th class="r">Máqs</th><th class="r">Avg CI</th><th class="r">Payback</th><th class="r">Share CI</th><th class="r">CI Índice</th></tr></thead>
+      <tbody id="ov-sclase-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TOP / BOTTOM 15% -->
+<div class="section-lbl">Top 15% y peor 15% — Global (${D.top15_global.length} máquinas c/u)</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Top 15% por coin-in</div>
+    <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Máq.</th><th>Sala</th><th>Juego</th><th class="r">Coin-in</th><th class="r">CI Índice sala</th><th>Clase</th></tr></thead><tbody id="top15-tbody"></tbody></table></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Peor 15% por coin-in</div>
+    <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Máq.</th><th>Sala</th><th>Juego</th><th class="r">Coin-in</th><th class="r">CI Índice sala</th><th>Clase</th></tr></thead><tbody id="bot15-tbody"></tbody></table></div>
+  </div>
+</div>
+  `;
+
+  // ── Charts ──
+  const salas=D.by_sala.sort((a,b)=>b.avg_ci-a.avg_ci);
+  mkChart('ov-sala-bar',{type:'bar',data:{labels:salas.map(s=>s.key.replace('GUALEGUAYCHU ANEXO','GCH ANEXO')),datasets:[{label:'Avg CI',data:salas.map(s=>s.avg_ci),backgroundColor:PALΑ,borderColor:PAL,borderWidth:1,borderRadius:4,yAxisID:'y'},{label:'Share Máqs %',data:salas.map(s=>+(s.share_maq*100).toFixed(1)),type:'line',borderColor:'#a78bfa',borderWidth:1.5,pointRadius:3,fill:false,yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#636878',font:{size:10},boxWidth:10}},tooltip:TT},scales:{x:{...SC,ticks:{...SC.ticks,maxRotation:35}},y:{...SC,ticks:{...SC.ticks,callback:v=>fmtK(v)}},y2:{...SC,position:'right',grid:{display:false},ticks:{...SC.ticks,callback:v=>v+'%'}}}}});
+
+  const legPie=document.getElementById('ov-pie-leg');
+  salas.forEach((s,i)=>{const e=document.createElement('div');e.className='leg-item';e.innerHTML=`<span class="leg-dot" style="background:${PAL[i%PAL.length]}"></span>${s.key.replace('GUALEGUAYCHU ANEXO','GCH ANEXO')}`;legPie.appendChild(e);});
+  mkChart('ov-sala-pie',{type:'doughnut',data:{labels:salas.map(s=>s.key),datasets:[{data:salas.map(s=>s.total_ci),backgroundColor:PAL,borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` ${fmtM(ctx.raw)} (${(ctx.raw/totalCI*100).toFixed(1)}%)`}}}}});
+
+  // Clase bar
+  const clases=['CLASE A','CLASE B','CLASE C','CLASE D','RULETA'];
+  const claseD=D.by_clase.sort((a,b)=>clases.indexOf(a.key)-clases.indexOf(b.key));
+  mkChart('ov-clase-bar',{type:'bar',data:{labels:claseD.map(c=>c.key),datasets:[{data:claseD.map(c=>c.avg_ci),backgroundColor:claseD.map(c=>CLASE_C[c.key]+'99'),borderColor:claseD.map(c=>CLASE_C[c.key]),borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` Avg CI: ${fmtK(ctx.raw)}`}}},scales:{x:{...SC},y:{...SC,ticks:{...SC.ticks,callback:v=>fmtK(v)}}}}});
+
+  // Marca bar top8
+  const marcaD=[...D.by_marca].sort((a,b)=>b.avg_ci-a.avg_ci).slice(0,8);
+  mkChart('ov-marca-bar',{type:'bar',data:{labels:marcaD.map(m=>m.key),datasets:[{data:marcaD.map(m=>m.avg_ci),backgroundColor:PALΑ.slice(0,8),borderColor:PAL.slice(0,8),borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` Avg CI: ${fmtK(ctx.raw)}`}}},scales:{x:{...SC},y:{...SC,ticks:{...SC.ticks,callback:v=>fmtK(v)}}}}});
+
+  // Sala × Clase grouped bar
+  const salasOrd=[...D.by_sala].sort((a,b)=>b.total_ci-a.total_ci).map(s=>s.key);
+  const clasesSC=['CLASE A','CLASE B','CLASE C','CLASE D'];
+  const scDatasets=clasesSC.map(cl=>({
+    label:cl,
+    data:salasOrd.map(sala=>{const r=D.by_sala_clase.find(x=>Array.isArray(x.key)&&x.key[0]===sala&&x.key[1]===cl);return r?r.avg_ci:0;}),
+    backgroundColor:CLASE_C[cl]+'88',borderColor:CLASE_C[cl],borderWidth:1,borderRadius:3
+  }));
+  mkChart('ov-sala-clase-chart',{type:'bar',data:{labels:salasOrd.map(s=>s.replace('GUALEGUAYCHU ANEXO','GCH ANEXO')),datasets:scDatasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#636878',font:{size:10},boxWidth:10}},tooltip:TT},scales:{x:{...SC,ticks:{...SC.ticks,maxRotation:35}},y:{...SC,ticks:{...SC.ticks,callback:v=>fmtK(v)}}}}});
+
+  // Tables
+  const salaRows=[...D.by_sala].sort((a,b)=>b.avg_ci-a.avg_ci);
+  document.getElementById('ov-sala-tbody').innerHTML=salaRows.map((r,i)=>`<tr>
+    <td><strong>${r.key}</strong></td>
+    <td class="r">${r.maquinas}</td>
+    <td class="r">${fmtK(r.avg_ci)}</td>
+    <td class="r">${fmtK(r.avg_win)}</td>
+    <td class="r">${fmtPB(r.payback)}</td>
+    <td class="r">$${Math.round(r.ap_prom)}</td>
+    <td class="r"><div class="bar-cell" style="justify-content:flex-end"><span style="font-family:var(--mono);font-size:11px">${fmtPct(r.share_ci)}</span><div class="bar-tr"><div class="bar-f" style="width:${Math.round(r.share_ci*100/0.3*60)}px"></div></div></div></td>
+    <td class="r">${fmtPct(r.share_maq)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(r.ci_index_global)}">${fmtIdx(r.ci_index_global)}</span></td>
+  </tr>`).join('');
+
+  const claseRows=[...D.by_clase].sort((a,b)=>b.avg_ci-a.avg_ci);
+  document.getElementById('ov-clase-tbody').innerHTML=claseRows.map(r=>`<tr>
+    <td><span class="badge ${CLASE_CL[r.key]||'b-D'}">${r.key}</span></td>
+    <td class="r">${r.maquinas}</td>
+    <td class="r">${fmtK(r.avg_ci)}</td>
+    <td class="r">${fmtPB(r.payback)}</td>
+    <td class="r">${fmtPct(r.share_ci)}</td>
+    <td class="r">${fmtPct(r.share_maq)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(r.ci_index_global)}">${fmtIdx(r.ci_index_global)}</span></td>
+  </tr>`).join('');
+
+  const marcaRows=[...D.by_marca].sort((a,b)=>b.avg_ci-a.avg_ci);
+  document.getElementById('ov-marca-tbody').innerHTML=marcaRows.map(r=>`<tr>
+    <td><strong>${r.key}</strong></td>
+    <td class="r">${r.maquinas}</td>
+    <td class="r">${fmtK(r.avg_ci)}</td>
+    <td class="r">${fmtPB(r.payback)}</td>
+    <td class="r">${fmtPct(r.share_ci)}</td>
+    <td class="r">${fmtPct(r.share_maq)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(r.ci_index_global)}">${fmtIdx(r.ci_index_global)}</span></td>
+  </tr>`).join('');
+
+  const scRows=[...D.by_sala_clase].sort((a,b)=>b.avg_ci-a.avg_ci).slice(0,30);
+  document.getElementById('ov-sclase-tbody').innerHTML=scRows.map(r=>`<tr>
+    <td>${r.key[0]}</td>
+    <td><span class="badge ${CLASE_CL[r.key[1]]||'b-D'}">${r.key[1]}</span></td>
+    <td class="r">${r.maquinas}</td>
+    <td class="r">${fmtK(r.avg_ci)}</td>
+    <td class="r">${fmtPB(r.payback)}</td>
+    <td class="r">${fmtPct(r.share_ci)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(r.ci_index_global)}">${fmtIdx(r.ci_index_global)}</span></td>
+  </tr>`).join('');
+
+  // Top/bot 15%
+  const top15=[...D.machines].filter(m=>D.top15_global.includes(m.uid)).sort((a,b)=>b.coin_in-a.coin_in);
+  document.getElementById('top15-tbody').innerHTML=top15.map((m,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td><a href="#" style="color:var(--acc);text-decoration:none;font-family:var(--mono)" onclick="showMaquina(${m.uid});return false">#${m.uid}</a></td>
+    <td style="font-size:11px">${m.sala}</td>
+    <td style="font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.juego}</td>
+    <td class="r">${fmtK(m.coin_in)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(m.ci_index_sala)}">${fmtIdx(m.ci_index_sala)}</span></td>
+    <td><span class="badge ${CLASE_CL[m.clase]||'b-D'}">${m.clase}</span></td>
+  </tr>`).join('');
+
+  const bot15=[...D.machines].filter(m=>D.bot15_global.includes(m.uid)).sort((a,b)=>a.coin_in-b.coin_in);
+  document.getElementById('bot15-tbody').innerHTML=bot15.map((m,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td><a href="#" style="color:var(--acc);text-decoration:none;font-family:var(--mono)" onclick="showMaquina(${m.uid});return false">#${m.uid}</a></td>
+    <td style="font-size:11px">${m.sala}</td>
+    <td style="font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.juego}</td>
+    <td class="r">${fmtK(m.coin_in)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(m.ci_index_sala)}">${fmtIdx(m.ci_index_sala)}</span></td>
+    <td><span class="badge ${CLASE_CL[m.clase]||'b-D'}">${m.clase}</span></td>
+  </tr>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   SALA PAGE
+   ═══════════════════════════════════════════════════ */
+function buildSalaPage(sala,D){
+  const sid='page-sala-'+sala.replace(/\s+/g,'-');
+  const pg=document.getElementById(sid);
+  const machs=D.machines.filter(m=>m.sala===sala);
+  const salaStats=D.by_sala.find(s=>s.key===sala);
+  const salaMachs=machs.length;
+  const salaCI=machs.reduce((a,m)=>a+m.coin_in,0);
+  const salaWin=machs.reduce((a,m)=>a+m.win,0);
+  const avgCI=salaCI/salaMachs;
+  const avgWin=salaWin/salaMachs;
+  const avgPB=machs.reduce((a,m)=>a+m.payback,0)/salaMachs;
+  const avgAP=machs.reduce((a,m)=>a+m.ap_prom,0)/salaMachs;
+
+  const top15ids=D.top15_sala[sala]||[];
+  const bot15ids=D.bot15_sala[sala]||[];
+  const n15=top15ids.length;
+
+  // Clase breakdown for this sala
+  const clasBySala=D.by_sala_clase.filter(r=>Array.isArray(r.key)&&r.key[0]===sala);
+  const marcaBySala=D.by_sala_marca.filter(r=>Array.isArray(r.key)&&r.key[0]===sala);
+
+  pg.innerHTML=`
+<div class="section-lbl">Indicadores — ${sala}</div>
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-lbl">Avg Coin-in / máq.</div><div class="kpi-val acc">${fmtK(avgCI)}</div><div class="kpi-sub">total ${fmtM(salaCI)}</div></div>
+  <div class="kpi"><div class="kpi-lbl">Avg Win / máq.</div><div class="kpi-val grn">${fmtK(avgWin)}</div><div class="kpi-sub">${salaMachs} máquinas</div></div>
+  <div class="kpi"><div class="kpi-lbl">Payback promedio</div><div class="kpi-val amb">${fmtPB(avgPB)}</div><div class="kpi-sub">retención ${((1-avgPB)*100).toFixed(2)}%</div></div>
+  <div class="kpi"><div class="kpi-lbl">Apuesta promedio</div><div class="kpi-val pur">$${Math.round(avgAP)}</div><div class="kpi-sub">por máquina</div></div>
+  <div class="kpi"><div class="kpi-lbl">CI Índice vs global</div><div class="kpi-val ${salaStats.ci_index_global>=1?'grn':'red'}">${fmtIdx(salaStats.ci_index_global)}</div><div class="kpi-sub">share ${fmtPct(salaStats.share_ci)} del CI total</div></div>
+</div>
+
+<!-- CHARTS -->
+<div class="section-lbl">Distribución interna</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Coin-in por clase</div>
+    <div class="chart-w" style="height:200px"><canvas id="${sid}-clase-bar"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Coin-in por marca</div>
+    <div class="chart-w" style="height:200px"><canvas id="${sid}-marca-bar"></canvas></div>
+  </div>
+</div>
+<div class="g2" style="margin-top:16px">
+  <div class="card">
+    <div class="card-t">Distribución de coin-in (histograma)</div>
+    <div class="chart-w" style="height:200px"><canvas id="${sid}-hist"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Payback por clase</div>
+    <div class="chart-w" style="height:200px"><canvas id="${sid}-pb-clase"></canvas></div>
+  </div>
+</div>
+
+<!-- TABLA CLASE -->
+<div class="section-lbl">Detalle por clase</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Por clase en ${sala}</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Clase</th><th class="r">Máqs</th><th class="r">Avg CI</th><th class="r">Avg WIN</th><th class="r">Payback</th><th class="r">Share CI sala</th><th class="r">CI Índice</th></tr></thead>
+      <tbody id="${sid}-clase-tbody"></tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Por marca en ${sala}</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Marca</th><th class="r">Máqs</th><th class="r">Avg CI</th><th class="r">Payback</th><th class="r">Share CI sala</th><th class="r">CI Índice</th></tr></thead>
+      <tbody id="${sid}-marca-tbody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- TOP / BOTTOM 15% SALA -->
+<div class="section-lbl">Top 15% y peor 15% en ${sala} (${n15} máqs c/u)</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-t">Top 15%</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>Máq.</th><th>Juego</th><th class="r">Coin-in</th><th class="r">CI Índice sala</th><th>Clase</th></tr></thead>
+      <tbody id="${sid}-top15"></tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Peor 15%</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>Máq.</th><th>Juego</th><th class="r">Coin-in</th><th class="r">CI Índice sala</th><th>Clase</th></tr></thead>
+      <tbody id="${sid}-bot15"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- TODAS LAS MÁQUINAS -->
+<div class="section-lbl">Todas las máquinas — ${sala}</div>
+<div class="card">
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>Máq.</th><th>Juego</th><th>Clase</th><th>Marca</th>
+      <th class="r">Coin-in</th><th class="r">Win</th><th class="r">Payback</th><th class="r">Ap. Prom</th><th class="r">CI Índice sala</th><th>Cat.</th>
+    </tr></thead>
+    <tbody id="${sid}-all-tbody"></tbody>
+  </table></div>
+</div>
+  `;
+
+  // Charts
+  const cKeys=clasBySala.map(r=>r.key[1]);
+  mkChart(`${sid}-clase-bar`,{type:'bar',data:{labels:cKeys,datasets:[{data:clasBySala.map(r=>r.avg_ci),backgroundColor:cKeys.map(c=>CLASE_C[c]+'88'),borderColor:cKeys.map(c=>CLASE_C[c]),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` Avg CI: ${fmtK(ctx.raw)}`}}},scales:{x:{...SC},y:{...SC,ticks:{...SC.ticks,callback:v=>fmtK(v)}}}}});
+
+  const mKeys=marcaBySala.sort((a,b)=>b.avg_ci-a.avg_ci).slice(0,8).map(r=>r.key[1]);
+  const mVals=marcaBySala.sort((a,b)=>b.avg_ci-a.avg_ci).slice(0,8).map(r=>r.avg_ci);
+  mkChart(`${sid}-marca-bar`,{type:'bar',data:{labels:mKeys,datasets:[{data:mVals,backgroundColor:PALΑ.slice(0,mKeys.length),borderColor:PAL.slice(0,mKeys.length),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` Avg CI: ${fmtK(ctx.raw)}`}}},scales:{x:{...SC},y:{...SC,ticks:{...SC.ticks,callback:v=>fmtK(v)}}}}});
+
+  // Histogram CI
+  const vals=machs.map(m=>m.coin_in);
+  const mx=Math.max(...vals),mn=0,bins=10;
+  const step=(mx-mn)/bins;
+  const hist=Array(bins).fill(0);
+  vals.forEach(v=>{const b=Math.min(bins-1,Math.floor((v-mn)/step));hist[b]++;});
+  const histLabels=Array.from({length:bins},(_,i)=>fmtK(mn+i*step));
+  mkChart(`${sid}-hist`,{type:'bar',data:{labels:histLabels,datasets:[{data:hist,backgroundColor:'#4f8ef755',borderColor:'#4f8ef7',borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` ${ctx.raw} máquinas`}}},scales:{x:{...SC,ticks:{...SC.ticks,maxRotation:40}},y:{...SC,ticks:{...SC.ticks,stepSize:1}}}}});
+
+  // PB by clase
+  mkChart(`${sid}-pb-clase`,{type:'bar',data:{labels:cKeys,datasets:[{data:clasBySala.map(r=>(r.payback*100).toFixed(2)),backgroundColor:cKeys.map(c=>CLASE_C[c]+'66'),borderColor:cKeys.map(c=>CLASE_C[c]),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:ctx=>` Payback: ${ctx.raw}%`}}},scales:{x:{...SC},y:{...SC,min:85,ticks:{...SC.ticks,callback:v=>v+'%'}}}}});
+
+  // Tables
+  const claseCI=clasBySala.reduce((a,r)=>a+r.total_ci,0)||1;
+  document.getElementById(`${sid}-clase-tbody`).innerHTML=[...clasBySala].sort((a,b)=>b.avg_ci-a.avg_ci).map(r=>`<tr>
+    <td><span class="badge ${CLASE_CL[r.key[1]]||'b-D'}">${r.key[1]}</span></td>
+    <td class="r">${r.maquinas}</td><td class="r">${fmtK(r.avg_ci)}</td><td class="r">${fmtK(r.avg_win)}</td>
+    <td class="r">${fmtPB(r.payback)}</td><td class="r">${fmtPct(r.total_ci/claseCI)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(r.ci_index_global)}">${fmtIdx(r.ci_index_global)}</span></td>
+  </tr>`).join('');
+
+  document.getElementById(`${sid}-marca-tbody`).innerHTML=[...marcaBySala].sort((a,b)=>b.avg_ci-a.avg_ci).map(r=>`<tr>
+    <td><strong>${r.key[1]}</strong></td>
+    <td class="r">${r.maquinas}</td><td class="r">${fmtK(r.avg_ci)}</td>
+    <td class="r">${fmtPB(r.payback)}</td><td class="r">${fmtPct(r.total_ci/salaCI)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(r.ci_index_global)}">${fmtIdx(r.ci_index_global)}</span></td>
+  </tr>`).join('');
+
+  // Top/bot 15% sala
+  const top15=machs.filter(m=>top15ids.includes(m.uid)).sort((a,b)=>b.coin_in-a.coin_in);
+  document.getElementById(`${sid}-top15`).innerHTML=top15.map((m,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td><a href="#" style="color:var(--acc);text-decoration:none;font-family:var(--mono)" onclick="showMaquina(${m.uid});return false">#${m.uid}</a></td>
+    <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.juego}</td>
+    <td class="r">${fmtK(m.coin_in)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(m.ci_index_sala)}">${fmtIdx(m.ci_index_sala)}</span></td>
+    <td><span class="badge ${CLASE_CL[m.clase]||'b-D'}">${m.clase}</span></td>
+  </tr>`).join('');
+
+  const bot15=machs.filter(m=>bot15ids.includes(m.uid)).sort((a,b)=>a.coin_in-b.coin_in);
+  document.getElementById(`${sid}-bot15`).innerHTML=bot15.map((m,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td><a href="#" style="color:var(--acc);text-decoration:none;font-family:var(--mono)" onclick="showMaquina(${m.uid});return false">#${m.uid}</a></td>
+    <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.juego}</td>
+    <td class="r">${fmtK(m.coin_in)}</td>
+    <td class="r"><span class="idx-pill ${idxClass(m.ci_index_sala)}">${fmtIdx(m.ci_index_sala)}</span></td>
+    <td><span class="badge ${CLASE_CL[m.clase]||'b-D'}">${m.clase}</span></td>
+  </tr>`).join('');
+
+  // All machines
+  const sortedAll=[...machs].sort((a,b)=>b.coin_in-a.coin_in);
+  document.getElementById(`${sid}-all-tbody`).innerHTML=sortedAll.map(m=>{
+    const isTop=top15ids.includes(m.uid),isBot=bot15ids.includes(m.uid);
+    return`<tr>
+      <td><a href="#" style="color:var(--acc);text-decoration:none;font-family:var(--mono);font-size:11px" onclick="showMaquina(${m.uid});return false">#${m.uid}</a></td>
+      <td style="font-size:11px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.juego}</td>
+      <td><span class="badge ${CLASE_CL[m.clase]||'b-D'}">${m.clase}</span></td>
+      <td style="font-size:11px">${m.marca}</td>
+      <td class="r">${fmtK(m.coin_in)}</td>
+      <td class="r">${fmtK(m.win)}</td>
+      <td class="r">${fmtPB(m.payback)}</td>
+      <td class="r">$${m.ap_prom}</td>
+      <td class="r"><span class="idx-pill ${idxClass(m.ci_index_sala)}">${fmtIdx(m.ci_index_sala)}</span></td>
+      <td>${isTop?'<span class="badge b-top">Top</span>':isBot?'<span class="badge b-bot">Peor</span>':''}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   BOOTSTRAP
+   ═══════════════════════════════════════════════════ */
+(async()=>{
+  try{
+    const raw=await loadData();
+    if(!raw)throw new Error('No se pudieron cargar los datos.');
+    DATA=raw;
+
+    // Build machine map
+    DATA.machines.forEach(m=>{machineMap[m.uid]=m;});
+
+    // Update header
+    document.getElementById('hdr-meta').textContent=DATA.meta.periodo+' · '+DATA.meta.total_maquinas+' máquinas';
+
+    // Build nav tabs + pages
+    const navEl=document.getElementById('nav-tabs');
+    const pagesEl=document.getElementById('pages');
+
+    // Overview page div
+    const ovPg=document.createElement('div');
+    ovPg.id='page-overview';
+    ovPg.className='page active';
+    pagesEl.appendChild(ovPg);
+
+    // Sala pages
+    const salas=DATA.by_sala.sort((a,b)=>b.total_ci-a.total_ci).map(s=>s.key);
+    salas.forEach(sala=>{
+      const btn=document.createElement('button');
+      btn.className='nav-tab';
+      btn.textContent=sala.replace('GUALEGUAYCHU ANEXO','GCH ANEXO');
+      btn.setAttribute('data-page','sala-'+sala.replace(/\s+/g,'-'));
+      btn.onclick=function(){setPage('sala-'+sala.replace(/\s+/g,'-'),this);};
+      navEl.appendChild(btn);
+
+      const pg=document.createElement('div');
+      pg.id='page-sala-'+sala.replace(/\s+/g,'-');
+      pg.className='page';
+      pagesEl.appendChild(pg);
+    });
+
+    // Hide loading, show content
+    document.getElementById('loading').style.display='none';
+
+    // Build overview
+    buildOverview(DATA);
+
+    // Build sala pages (deferred)
+    salas.forEach(sala=>{buildSalaPage(sala,DATA);});
+
+  }catch(e){
+    document.getElementById('loading').style.display='none';
+    const eb=document.getElementById('err-box');
+    eb.style.display='block';
+    eb.textContent='Error: '+e.message;
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>
