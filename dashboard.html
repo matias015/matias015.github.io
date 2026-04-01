@@ -161,6 +161,10 @@ tbody tr:last-child td{border-bottom:none}
   <div class="search-wrap">
     <input class="search-input" type="text" id="search-uid" placeholder="N° máquina…" maxlength="10">
     <button class="search-btn" onclick="buscarMaquina()">Buscar</button>
+    <div id="user-chip" style="display:flex;align-items:center;gap:8px;margin-left:4px">
+      <span id="user-email" style="font-size:11px;color:var(--muted);font-family:var(--mono);display:none"></span>
+      <button id="logout-btn" onclick="doLogout()" style="background:none;border:1px solid var(--b2);border-radius:var(--r);padding:6px 12px;color:var(--muted);font-size:11px;cursor:pointer;display:none">Salir</button>
+    </div>
   </div>
 </header>
 
@@ -195,11 +199,26 @@ tbody tr:last-child td{border-bottom:none}
 
 <script>
 /* ═══════════════════════════════════════════════════
-   CONFIG — cambiá DATA_SOURCE a tu API en producción
+   CONFIG
    ═══════════════════════════════════════════════════ */
 const DATA_SOURCE = './slots_data.json';
-const FETCH_HEADERS = {};
-const INLINE_DATA = {"meta":{"mes":"14-FEBRERO","periodo":"Febrero 2025","total_maquinas":1062,"total_salas":11},"salas":[{"sala":"GUALEGUAYCHU","maquinas":207,"coin_in":219228624,"win":13729480,"payback_pct":92.9879,"retencion_pct":7.0121,"ci_por_maq":1059075,"ap_prom":303.73},{"sala":"COLON","maquinas":158,"coin_in":184584505,"win":12820405,"payback_pct":92.3221,"retencion_pct":7.6779,"ci_por_maq":1168256,"ap_prom":243.32},{"sala":"GUALEGUAY","maquinas":115,"coin_in":98780813,"win":7017643,"payback_pct":92.8841,"retencion_pct":7.1159,"ci_por_maq":858964,"ap_prom":227.78},{"sala":"VILLAGUAY","maquinas":94,"coin_in":55174143,"win":3257924,"payback_pct":92.7903,"retencion_pct":7.2097,"ci_por_maq":586959,"ap_prom":237.48},{"sala":"NOGOYA","maquinas":92,"coin_in":49282946,"win":3435809,"payback_pct":92.5458,"retencion_pct":7.4542,"ci_por_maq":535684,"ap_prom":303.37},{"sala":"GUALEGUAYCHU ANEXO","maquinas":83,"coin_in":41818512,"win":2826326,"payback_pct":92.7711,"retencion_pct":7.2289,"ci_por_maq":503837,"ap_prom":307.53},{"sala":"TALA","maquinas":72,"coin_in":33116941,"win":2083595,"payback_pct":92.5284,"retencion_pct":7.4716,"ci_por_maq":459958,"ap_prom":263.96},{"sala":"SANTA ELENA","maquinas":54,"coin_in":20961836,"win":1125103,"payback_pct":93.0747,"retencion_pct":6.9253,"ci_por_maq":388182,"ap_prom":429.24},{"sala":"VILLA ELISA","maquinas":62,"coin_in":17080421,"win":1001566,"payback_pct":92.8002,"retencion_pct":7.1998,"ci_por_maq":275491,"ap_prom":329.53},{"sala":"LA PAZ ANEXO","maquinas":82,"coin_in":12430811,"win":694442,"payback_pct":93.2828,"retencion_pct":6.7172,"ci_por_maq":151595,"ap_prom":294.78},{"sala":"SAN SALVADOR","maquinas":34,"coin_in":3902155,"win":199688,"payback_pct":92.8803,"retencion_pct":7.1197,"ci_por_maq":114769,"ap_prom":725.35}],"marcas":{"ZITRO":252,"WMS":207,"IGT":266,"BALLY":86,"ARISTOCRAT":61,"KONAMI":52,"EVERI":49,"AYEX":25,"EGT":18,"MAGIC DREAMS":13,"NOVOMATIC":11,"ATRONIC":8,"SCIENTIFIC GAMES":5,"SPIELLO":5,"BELATRA":2,"IGT REFABRIC":2},"top_juegos":[{"juego":"ASIAN WOODS/CASINO MIX/GODS LAND/LADY …","coin_in":46384853},{"juego":"SWEET TROPICAL FRUITS / TOTEM SPIRITS …","coin_in":39292394},{"juego":"TRIPLE CHARM AMETHYST/TRIPLE CHARM EME…","coin_in":38947104},{"juego":"MAKEDA / SEA WOLF","coin_in":30670192},{"juego":"AVALON LEGENDARY SWORD/ ELYSIUM LEGEND…","coin_in":28898857},{"juego":"SUMMER / AUTUMN / WINTER / SPRING","coin_in":23267156},{"juego":"88 FORTUNES","coin_in":21065405},{"juego":"MEGA KING / BRAVE BUFFALO / DRAGON PRI…","coin_in":20356431},{"juego":"AVALON/ ELYSIUM","coin_in":20036279},{"juego":"SPIN ROULETTE","coin_in":18918577}],"clases_por_sala":{"GUALEGUAYCHU":{"CLASE A":80,"CLASE B":42,"CLASE C":41,"CLASE D":47,"RULETA":5},"COLON":{"CLASE A":76,"CLASE B":18,"CLASE C":31,"CLASE D":31,"RULETA":2},"GUALEGUAY":{"CLASE A":42,"CLASE B":11,"CLASE C":30,"CLASE D":30,"RULETA":2},"VILLAGUAY":{"CLASE A":27,"CLASE B":16,"CLASE C":26,"CLASE D":23,"RULETA":2},"NOGOYA":{"CLASE A":18,"CLASE B":6,"CLASE C":32,"CLASE D":34,"RULETA":3},"GUALEGUAYCHU ANEXO":{"CLASE A":12,"CLASE B":17,"CLASE C":35,"CLASE D":14,"RULETA":5},"TALA":{"CLASE A":8,"CLASE B":19,"CLASE C":17,"CLASE D":26,"RULETA":2},"SANTA ELENA":{"CLASE A":3,"CLASE B":7,"CLASE C":8,"CLASE D":34,"RULETA":2},"VILLA ELISA":{"CLASE A":9,"CLASE B":7,"CLASE C":11,"CLASE D":32,"RULETA":3},"LA PAZ ANEXO":{"CLASE A":3,"CLASE B":20,"CLASE C":21,"CLASE D":34,"RULETA":4},"SAN SALVADOR":{"CLASE A":0,"CLASE B":0,"CLASE C":7,"CLASE D":24,"RULETA":3}}};
+
+/* ── Auth: solo localStorage, sin tokens ─────────── */
+function getEmail()  { return localStorage.getItem('tol_email') || ''; }
+function clearAuth() { localStorage.removeItem('tol_email'); }
+
+function doLogout() {
+  clearAuth();
+  location.href = 'index.html';
+}
+
+/* ── Guard: si no hay email guardado → login ─────── */
+function authGuard() {
+  if (!getEmail()) { location.href = 'index.html'; return false; }
+  return true;
+}
+
+function authHeaders() { return {}; }
 
 /* ─── PALETTES ───────────────────────────────────── */
 const PAL = ['#4f8ef7','#2dd4bf','#f59e0b','#f43f5e','#a78bfa','#fb923c','#38bdf8','#4ade80','#facc15','#f472b6','#94a3b8','#60a5fa','#34d399'];
@@ -228,8 +247,11 @@ let machineMap={};
 
 /* ─── LOAD DATA ─────────────────────────────────── */
 async function loadData(){
-  try{const r=await fetch(DATA_SOURCE,{headers:FETCH_HEADERS});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}
-  catch(e){console.warn('Fallback a datos inline',e);return INLINE_DATA;}
+  try{
+    const r=await fetch(DATA_SOURCE);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return await r.json();
+  }catch(e){console.warn('Error cargando datos:',e);return null;}
 }
 
 /* ─── PAGE MANAGEMENT ───────────────────────────── */
@@ -749,6 +771,12 @@ function buildSalaPage(sala,D){
    ═══════════════════════════════════════════════════ */
 (async()=>{
   try{
+    if(!authGuard())return;
+    // Mostrar email y botón de logout
+    const emailEl=document.getElementById('user-email');
+    const logoutEl=document.getElementById('logout-btn');
+    if(emailEl){emailEl.textContent=getEmail();emailEl.style.display='inline';}
+    if(logoutEl)logoutEl.style.display='block';
     const raw=await loadData();
     if(!raw)throw new Error('No se pudieron cargar los datos.');
     DATA=raw;
